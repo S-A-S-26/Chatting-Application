@@ -5,6 +5,7 @@ import './App.css'
 import Home from './components/Home'
 import { Route, Router, Routes } from 'react-router-dom'
 import Registeration from './components/Registeration'
+// import 'dotenv/config'
 
 function App() {
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Search} from 'lucide-react'
+import {MapPin, MessageSquareText, Pin, Search} from 'lucide-react'
 import ProfileStrip from './ProfileStrip'
 
 export default function ContactList() {
@@ -17,13 +17,19 @@ export default function ContactList() {
         </div>
         <div className='overflow-scroll max-h-[calc(100vh-7rem)]'>
             <div>
-                <p>pinned message</p>
+                <p className='flex justify-start items-center gap-2 py-4 text-gray-400 px-8 text-sm'>
+                    <span><Pin className='rotate-45 text-gray-500'strokeWidth={1} size={19} /></span>
+                    <span className='tracking-tighter'>Pinned Message</span>
+                </p>
                 {det.map((val,idx) => (
                     <ProfileStrip key={idx} {...{val}}/>
                 ))}
             </div>
             <div>
-            <p>all message</p>
+            <p className='flex justify-start items-center gap-2 py-4 text-gray-400 px-8 text-sm'>
+                    <span><MessageSquareText className='text-gray-500'strokeWidth={1} size={19} /></span>
+                    <span className='tracking-tighter'>All Messages</span>
+            </p>
                 {det.map((val,idx) => (
                     <ProfileStrip key={idx} {...{val}}/>
                 ))}
