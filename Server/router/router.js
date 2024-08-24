@@ -1,9 +1,14 @@
 const express = require('express')
 const router = express.Router()
 const register =require('../controller/register')
-const userValidation = require('../zodschema/user')
+const {loginVal,regVal} = require('../zodschema/user')
 const validate = require('../middleware/validate')
+const jwtAuth = require('../middleware/jwtauth')
+const loginUser = require('../controller/login')
+const checkAuth = require('../controller/checkAuth')
 
-router.post('/register',validate(userValidation),register)
+router.post('/register',validate(regVal),register)
+router.post('/loginuser',validate(loginVal),loginUser)
+router.get('/checkauth',jwtAuth,checkAuth)
 
 module.exports = router;

@@ -5,6 +5,8 @@ import './App.css'
 import Home from './components/Home'
 import { Route, Router, Routes } from 'react-router-dom'
 import Registeration from './components/Registeration'
+import AuthSection from './components/AuthSection'
+import { Toaster } from 'react-hot-toast'
 // import 'dotenv/config'
 
 function App() {
@@ -12,9 +14,10 @@ function App() {
 
   return (
     <>
+      <Toaster/>
       <Routes>
         <Route path='/' element={<Home/>}/>
-        <Route path='/register' element={<Registeration/>}/>
+        <Route path='/register' element={<AuthSection/>}/>
       </Routes>
     </>
   )

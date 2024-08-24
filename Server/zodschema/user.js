@@ -1,12 +1,7 @@
 const z = require('zod')
 
-const userValidation = z
+const loginVal = z
 .object({
-    username:z
-    .string({message:"password required"})
-    .min(3,{message:"minimum 3 characters required for username"})
-    .max(20,{message:"minimum 3 characters required for username"})
-    .trim(),
     phone:z
     .string({message:"password required"})
     .min(10,{message:"minimum 10 digits required for phone number"})
@@ -19,4 +14,12 @@ const userValidation = z
     .trim(),
 })
 
-module.exports = userValidation
+const regVal =loginVal.extend({
+    username:z
+    .string({message:"password required"})
+    .min(3,{message:"minimum 3 characters required for username"})
+    .max(20,{message:"minimum 3 characters required for username"})
+    .trim(),
+})
+
+module.exports = {loginVal,regVal}

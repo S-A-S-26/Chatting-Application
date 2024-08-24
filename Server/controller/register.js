@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 
 async function register(req,res){
     const data= req.body
+    console.log("register data",data)
     if (!data){
         return res.status(400).json({msg:'No data provided'})
     }
@@ -17,7 +18,7 @@ async function register(req,res){
         console.log("registeration done")
         return res.status(200).json({msg:"User created successfully",token:token})
     }else{
-        return res.status(400).json({msg:'User already exists'})
+        return res.status(400).json({msg:'Already Registered'})
     }
 }
 
