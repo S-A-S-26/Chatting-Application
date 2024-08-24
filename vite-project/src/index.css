@@ -17,6 +17,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'sf';
+  src: url('./fonts/SF-Pro-Text-Light.otf') format('opentype');
+  font-weight: 300; /* Semi-bold weight */
+  font-style: normal;
+}
+
 :root {
   /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
   font-family: 'sf';
