@@ -1,28 +1,48 @@
-import React, { useEffect , lazy } from "react";
+import React, { useEffect , lazy, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { TProfile } from "../Interfaces/Interface";
 const ContactList = lazy(()=> import("./ContactList"));
 const Message = lazy(()=>import("./Message"));
 
 export default function Home() {
   const Navigate = useNavigate();
+  const [userData,setUserData] = useState<TProfile>({
+    _id: '',
+    username: '',
+    phone: '',
+    status:'',
+    profile:'',
+  });
+  const [showProfile,setProfileStatus] = useState<boolean>(false)
 
-  useEffect(() => {
-    console.log("use effect home");
+  async function checkAuth() {
     const token = localStorage.getItem("token")
     if (!token){
       Navigate("/register");
       return;
     }
-    async function checkAuth() {
-      let res =await fetch(import.meta.env.VITE_BASE_URL + "/checkauth", {
-        method: "GET",
-        headers: { Authorization: "Bearer " + token },
-      });
-      let data = await res.json();
-      if (!data.msg) {
-        Navigate("/register");
-      }
+    let res =await fetch(import.meta.env.VITE_BASE_URL + "/checkauth", {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token },
+    });
+    let data = await res.json();
+    console.log("checkAuth", data);
+    if (!data.msg) {
+      Navigate("/register");
+    }else{
+      setUserData({
+        _id: data.user._id,
+        username: data.user.username,
+        phone: data.user.phone,
+        status:data.user.status,
+        profile:data.user.profile,
+      })
     }
+  }
+
+  useEffect(() => {
+    console.log("use effect home");
+    
     checkAuth();
   }, []);
 
@@ -30,10 +50,10 @@ export default function Home() {
     <>
       <div className="flex grow">
         <div className="w-full md:w-6/12 xl:w-4/12 2xl-3/12">
-          <ContactList />
+          <ContactList {...{showProfile,userData}}/>
         </div>
         <div className="hidden border md:w-6/12 md:block xl:w-8/12 2xl-9/12">
-          <Message />
+          <Message {...{showProfile,setProfileStatus}}/>
         </div>
       </div>
     </>

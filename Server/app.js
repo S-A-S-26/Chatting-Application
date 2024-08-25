@@ -3,10 +3,13 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const router = require('./router/router')
-app.use(express())
-app.use(express.json())
+const path = require('path');
+console.log('path join',path.join(__dirname, 'uploads'))
 app.use(cors())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 app.use('/api',router)
+app.use('/static',express.static(path.join(__dirname, 'uploads')));
 
 
 const connectDb = require('./db/connectDb')

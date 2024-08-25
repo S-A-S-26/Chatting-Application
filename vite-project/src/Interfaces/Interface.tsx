@@ -8,3 +8,10 @@ export interface TUser extends TLogin{
     
 }
 
+export interface TProfile{
+    _id: string,
+    username: string,
+    phone: string,
+    status:string,
+    profile:string,
+  }

@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const User = require('../model/user')
 
 async function jwtAuth(req,res,next){
     try {
@@ -11,7 +12,14 @@ async function jwtAuth(req,res,next){
         token = token.replace("Bearer",'').trim();
         console.log("token after",token);
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
+        console.log("decoded",decoded._doc);
+        if (!decoded) {
+            console.log("inside catch")
+            return res.status(401).json({ msg: 'Token is invalid' });  // token is not valid
+        }
+        const user = await User.findOne({_id:decoded._id})
+        req.user = user;
+        delete req.user.password
         next();
     } catch (error) {
         res.status(401).json({ msg: `Invalid token: ${error}` });
