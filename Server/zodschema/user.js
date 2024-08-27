@@ -22,4 +22,24 @@ const regVal =loginVal.extend({
     .trim(),
 })
 
-module.exports = {loginVal,regVal}
+const statusVal =z.object({
+    status:z
+    .string()
+    .max(120,{message:"minimum 3 characters required for status"})
+    .trim()
+    .optional(),
+    _id:z
+    .string()
+})
+
+const userNameVal =z.object({
+    username:z
+    .string({message:"password required"})
+    .min(3,{message:"minimum 3 characters required for username"})
+    .max(20,{message:"minimum 3 characters required for username"})
+    .trim(),
+    _id:z
+    .string()
+})
+
+module.exports = {loginVal,regVal,userNameVal,statusVal}

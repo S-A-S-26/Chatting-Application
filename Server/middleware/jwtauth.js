@@ -5,6 +5,7 @@ async function jwtAuth(req,res,next){
     try {
         let token = req.header('Authorization');
         console.log("token",token);
+        console.log("jwt auth body",req.body)
         if (!token) {
             console.log("inside if")
             return res.status(401).json({ msg: 'Token not provided' });
@@ -17,7 +18,7 @@ async function jwtAuth(req,res,next){
             console.log("inside catch")
             return res.status(401).json({ msg: 'Token is invalid' });  // token is not valid
         }
-        const user = await User.findOne({_id:decoded._id})
+        const user = await User.findOne({_id:decoded._id}).select({password:0})
         req.user = user;
         delete req.user.password
         next();

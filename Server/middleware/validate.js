@@ -1,5 +1,6 @@
 const validate = (zodSchema)=> async (req,res,next) => {
     try {
+        console.log("zod body",req.body)
         const data = await zodSchema.parseAsync(req.body)
         req.body = data
         next()

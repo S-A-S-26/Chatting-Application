@@ -15,3 +15,10 @@ export interface TProfile{
     status:string,
     profile:string,
   }
+
+export interface TUpdateProfile{
+    _id: string,
+    username?: string,
+    status?: string,
+  
+}

@@ -1,6 +1,8 @@
 import React, { useEffect , lazy, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TProfile } from "../Interfaces/Interface";
+import { useDispatch,useSelector } from "react-redux";
+import { setUser } from "../store/utils/utils";
 const ContactList = lazy(()=> import("./ContactList"));
 const Message = lazy(()=>import("./Message"));
 
@@ -13,7 +15,9 @@ export default function Home() {
     status:'',
     profile:'',
   });
+  
   const [showProfile,setProfileStatus] = useState<boolean>(false)
+  const dispatch = useDispatch()
 
   async function checkAuth() {
     const token = localStorage.getItem("token")
@@ -27,7 +31,7 @@ export default function Home() {
     });
     let data = await res.json();
     console.log("checkAuth", data);
-    if (!data.msg) {
+    if (!data.user) {
       Navigate("/register");
     }else{
       setUserData({
@@ -37,6 +41,13 @@ export default function Home() {
         status:data.user.status,
         profile:data.user.profile,
       })
+      dispatch(setUser({
+        _id: data.user._id,
+        username: data.user.username,
+        phone: data.user.phone,
+        status:data.user.status,
+        profile:data.user.profile,
+      }));
     }
   }
 
