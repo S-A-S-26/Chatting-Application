@@ -3,9 +3,21 @@ import {MapPin, MessageCircleMore, MessageSquareText, Pin, Search} from 'lucide-
 import ProfileStrip from './ProfileStrip'
 import ProfileEdit from './ProfileEdit'
 import { TProfile } from '../Interfaces/Interface'
+import ExpandableSearch from './ExpandableSearch'
 
 export default function ContactList({showProfile,userData}:{showProfile:boolean,userData:TProfile}) {
   const det= ["Sujit Sutar", "Sagar Rite", "Shyam Sutar", "Geeta Sutar", "John Doe", "George Bush", "Putin"]
+  const [contactList,setContactList] = useState([])
+
+  async function searchPhone(value:string){
+    let res=await fetch(import.meta.env.VITE_BASE_URL+"/searchuser?phone="+value)
+    let data= await res.json()
+    console.log("searchPhone",data)
+    if (data){
+        setContactList(data)
+    }
+  }
+
   return (
     <>
         {showProfile?
@@ -16,11 +28,7 @@ export default function ContactList({showProfile,userData}:{showProfile:boolean,
                 <h2 className='text-secondary text-3xl font-normal tracking-tighter flex items-center'>
                     <MessageCircleMore strokeWidth={2} size={30}/><span></span>Messages
                 </h2>
-                <div className='flex'>
-                    <div className='bg-gray-50 flex p-2 rounded-full transition-all duration-500 group hover:bg-gray-100'>
-                        <Search strokeWidth={1.3}className='text-gray-400 transition-all duration-500 group-hover:text-gray-600'/> 
-                    </div>
-                </div>
+                <ExpandableSearch {...{searchPhone}}/>
             </div>
             <div className='overflow-scroll max-h-[calc(100vh-7rem)]'>
                 <div>
