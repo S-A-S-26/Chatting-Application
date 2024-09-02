@@ -8,6 +8,7 @@ export const userSlice = createSlice({
       phone: '',
       status:'',
       profile:'',
+      pinned: [],
     },
     reducers: {
       setUser: (state, action) => {
@@ -17,6 +18,7 @@ export const userSlice = createSlice({
         state.phone = action.payload.phone;
         state.status = action.payload.status;
         state.profile = action.payload.profile;
+        state.pinned = action.payload.pinned;
       },
 
     },

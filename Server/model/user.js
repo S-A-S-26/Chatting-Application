@@ -7,6 +7,7 @@ const userSchema = new Schema({
     password:{type:String, required:true},
     profile:{type:String},
     status:{type:String ,default:"Hey There"},
+    pinned:{type:[String]},
     createdAt:{type:Date, required:true ,default:Date.now()},
 },{ timestamps: true })
 

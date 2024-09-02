@@ -14,6 +14,7 @@ export default function Home() {
     phone: '',
     status:'',
     profile:'',
+    pinned: [],
   });
   
   const [showProfile,setProfileStatus] = useState<boolean>(false)
@@ -40,6 +41,7 @@ export default function Home() {
         phone: data.user.phone,
         status:data.user.status,
         profile:data.user.profile,
+        pinned: data.user.pinned,
       })
       dispatch(setUser({
         _id: data.user._id,
@@ -47,6 +49,7 @@ export default function Home() {
         phone: data.user.phone,
         status:data.user.status,
         profile:data.user.profile,
+        pinned:data.user.pinned
       }));
     }
   }

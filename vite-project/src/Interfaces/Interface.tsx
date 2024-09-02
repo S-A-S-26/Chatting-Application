@@ -14,6 +14,7 @@ export interface TProfile{
     phone: string,
     status:string,
     profile:string,
+    pinned:[],
   }
 
 export interface TUpdateProfile{

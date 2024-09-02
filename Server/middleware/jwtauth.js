@@ -19,6 +19,7 @@ async function jwtAuth(req,res,next){
             return res.status(401).json({ msg: 'Token is invalid' });  // token is not valid
         }
         const user = await User.findOne({_id:decoded._id}).select({password:0})
+        console.log("user jwt",user)
         req.user = user;
         delete req.user.password
         next();

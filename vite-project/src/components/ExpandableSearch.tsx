@@ -1,9 +1,10 @@
 import { Search } from 'lucide-react'
 import React, { useRef, useState } from 'react'
 
-export default function ExpandableSearch({searchPhone}:{searchPhone:(value:string)=>void}) {
+export default function ExpandableSearch({searchPhone,setShowSearch,setContactList}:{searchPhone:(value:string)=>void,setShowSearch:(value:boolean)=>void,setContactList:(value:[])=>void}) {
   const [expandSearch,setExpand] = useState<boolean>(false)
-  const inputSearch = useRef<HTMLDivElement|undefined>()
+  const inputSearch = useRef<HTMLDivElement>(null)
+  const inputElm = useRef<HTMLInputElement>(null)
   const [searchText,setSearchText] = useState('')
   let skip = false
 
@@ -12,9 +13,15 @@ export default function ExpandableSearch({searchPhone}:{searchPhone:(value:strin
     console.log("openSearch",inputSearch)
     if (inputSearch.current) {
         if(expandSearch){
-            inputSearch.current.style.width = '0px'
+          setShowSearch(false)
+          setContactList([])
+          if (inputElm.current) {
+            inputElm.current.value = '';
+          }
+          inputSearch.current.style.width = '0px'
         }else{
-            inputSearch.current.style.width = '200px'
+          setShowSearch(true)
+          inputSearch.current.style.width = '200px'
         }
     }
   }
@@ -35,7 +42,7 @@ export default function ExpandableSearch({searchPhone}:{searchPhone:(value:strin
     <>
      <div className={`relative border-green-400 flex items-center rounded-full justify-between bg-gray-50`}>
         <div className={`transition-all duration-500 w-0 rounded-full overflow-hidden`} ref={inputSearch}>
-            <input type='text' placeholder='Search' className='w-full px-6 py-2 text-sm text-gray-500 border-0 focus:outline-none bg-gray-50 underline rounded-full' onChange={(e)=>startSearch(e)}/>
+            <input ref={inputElm} type='text' placeholder='Search' className='w-full px-6 py-2 text-sm text-gray-500 border-0 focus:outline-none bg-gray-50 underline rounded-full' onChange={(e)=>startSearch(e)}/>
         </div>
         <div className='relative right-0'>
             <button className='bg-gray-50 flex p-2 rounded-full transition-all duration-500 group hover:bg-gray-100 hover:border-none border-none' onClick={openSearch}>
