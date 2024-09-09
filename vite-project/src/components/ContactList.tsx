@@ -22,6 +22,11 @@ export default function ContactList({showProfile,userData}:{showProfile:boolean,
     }
   }
 
+  async function fetchActiveContacts(){
+    let res=await fetch(import.meta.env.VITE_BASE_URL+"/searchuser?phone="+value)
+    let data= await res.json()
+  }
+
   return (
     <>
         {showProfile?

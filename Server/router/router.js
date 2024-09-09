@@ -20,5 +20,6 @@ router.post('/profileupdate',upload.single('photo'),updateProfile)
 router.patch('/updateusername',validate(userNameVal),jwtAuth,updateUserData.userNameUpdate)
 router.patch('/updatestatus',jwtAuth,validate(statusVal),updateUserData.statusUpdate)
 router.get('/searchuser',searchUser)
+router.get('/userchatprofiles',userChatProfiles)
 
 module.exports = router;
