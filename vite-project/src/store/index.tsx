@@ -1,7 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { userSlice } from "./utils/utils";
-import { messageProfile } from "./utils/messageProfile";
-
+import { messageProfile } from "./utils/messageprofile";
+import { combineReducers } from '@reduxjs/toolkit'
+const rootReducer = combineReducers({})
 const store = configureStore({
     reducer: {
         user: userSlice.reducer,
@@ -10,3 +11,4 @@ const store = configureStore({
 })
 
 export default store
+export type IRootState = ReturnType<typeof rootReducer>

@@ -11,6 +11,7 @@ const upload = require('../middleware/multerSetting')
 const updateProfile = require('../controller/updateProfile')
 const updateUserData = require('../controller/updateUserData')
 const searchUser = require('../controller/searchUser')
+const userChatProfiles = require('../controller/userChatProfiles')
 
 
 router.post('/register',validate(regVal),register)
