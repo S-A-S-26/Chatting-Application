@@ -27,7 +27,8 @@ export default function Message({ setProfileStatus, showProfile }: { showProfile
       <div className='h-full flex flex-col'>
         <div className='flex justify-between px-7 border h-28 border-l-0 items-center'>
           {/* <h2 className='text-mysecondary text-3xl font-normal tracking-tighter'></h2> */}
-          {messageProfileData.id ?
+          {/* <div>{messageProfileData}</div> */}
+          {messageProfileData._id ?
             <TopProfile />
             :
             <ProfileSkeleton />
