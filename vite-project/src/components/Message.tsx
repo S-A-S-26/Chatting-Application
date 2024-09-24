@@ -6,11 +6,13 @@ import { useSelector } from 'react-redux'
 import { IRootState } from '../store'
 import { Skeleton } from '@/components/ui/skeleton'
 import ProfileSkeleton from './ProfileSkeleton'
+import Messages from './Messages'
 
 export default function Message({ setProfileStatus, showProfile }: { showProfile: boolean, setProfileStatus: (value: boolean) => void }) {
   const Navigate = useNavigate()
 
   const messageProfileData = useSelector((state: IRootState) => state.messageProfileData)
+
 
   //this is just for dev purpose to check what value i get
   useEffect(() => {
@@ -21,7 +23,6 @@ export default function Message({ setProfileStatus, showProfile }: { showProfile
     localStorage.removeItem('token')
     Navigate('/register')
   }
-
   return (
     <>
       <div className='h-full flex flex-col'>
@@ -48,7 +49,7 @@ export default function Message({ setProfileStatus, showProfile }: { showProfile
         </div>
         <div className='bg-mybackground grow flex flex-col'>
           <div className='grow'>
-
+            {/* <Messages /> */}
           </div>
           <div className='h-20 flex items-center justify-center bg-white'>
             <div className='flex grow gap-3 mx-4 px-8 h-12 items-center rounded-full bg-mybackground'>
