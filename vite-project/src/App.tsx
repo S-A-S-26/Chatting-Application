@@ -14,7 +14,7 @@ function App() {
 
   const url = import.meta.env.VITE_BASE
   console.log("url", url)
-  const socket = io(url)
+  export const socket = io(url)
 
   return (
     <>

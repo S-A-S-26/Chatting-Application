@@ -1,25 +1,18 @@
 const jwt = require('jsonwebtoken')
 const User = require('../model/user')
 
-async function jwtAuth(req,res,next){
+async function jwtAuth(req, res, next) {
     try {
         let token = req.header('Authorization');
-        console.log("token",token);
-        console.log("jwt auth body",req.body)
         if (!token) {
-            console.log("inside if")
             return res.status(401).json({ msg: 'Token not provided' });
         }
-        token = token.replace("Bearer",'').trim();
-        console.log("token after",token);
+        token = token.replace("Bearer", '').trim();
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log("decoded",decoded._doc);
         if (!decoded) {
-            console.log("inside catch")
             return res.status(401).json({ msg: 'Token is invalid' });  // token is not valid
         }
-        const user = await User.findOne({_id:decoded._id}).select({password:0})
-        console.log("user jwt",user)
+        const user = await User.findOne({ _id: decoded._id }).select({ password: 0 })
         req.user = user;
         delete req.user.password
         next();
