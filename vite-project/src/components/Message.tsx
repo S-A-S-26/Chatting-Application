@@ -7,7 +7,6 @@ import { IRootState } from '../store'
 import { Skeleton } from '@/components/ui/skeleton'
 import ProfileSkeleton from './ProfileSkeleton'
 import Messages from './Messages'
-import socket from '../App.tsx'
 
 export default function Message({ setProfileStatus, showProfile }: { showProfile: boolean, setProfileStatus: (value: boolean) => void }) {
   const Navigate = useNavigate()
@@ -18,9 +17,6 @@ export default function Message({ setProfileStatus, showProfile }: { showProfile
   //this is just for dev purpose to check what value i get
   useEffect(() => {
     console.log('messageProfileData', messageProfileData)
-    socket.on("welcome", (msg: string) => {
-      console.log("socket msg", msg)
-    })
   }, [messageProfileData])
 
   function logout() {

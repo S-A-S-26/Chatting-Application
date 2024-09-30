@@ -7,14 +7,9 @@ import { Route, Router, Routes } from 'react-router-dom'
 import Registeration from './components/Registeration'
 import AuthSection from './components/AuthSection'
 import { Toaster } from 'react-hot-toast'
-import { io } from 'socket.io-client';
 // import 'dotenv/config'
 
 function App() {
-
-  const url = import.meta.env.VITE_BASE
-  console.log("url", url)
-  export const socket = io(url)
 
   return (
     <>
