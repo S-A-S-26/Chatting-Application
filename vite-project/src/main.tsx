@@ -8,13 +8,13 @@ import { Provider } from 'react-redux'
 import store from './store/index.tsx'
 
 createRoot(document.getElementById('root')!).render(
-  <BrowserRouter>
+  < BrowserRouter >
     <Suspense fallback={<Loading />}>
       <Provider store={store}>
         <App />
       </Provider>
     </Suspense>
-  </BrowserRouter>
+  </BrowserRouter >
 )
 
 {/* <StrictMode> */ }

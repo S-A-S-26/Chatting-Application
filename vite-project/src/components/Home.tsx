@@ -4,6 +4,7 @@ import { TProfile } from "../Interfaces/Interface";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../store/utils/utils";
 import { io } from "socket.io-client";
+import { Socket } from "socket.io-client";
 import MobileFooter from "./MobileFooter";
 
 const ContactList = lazy(() => import("./ContactList"));
@@ -22,7 +23,7 @@ export default function Home() {
 
   const [showProfile, setProfileStatus] = useState<boolean>(false)
   const dispatch = useDispatch()
-
+  const [socket, setSocket] = useState<Socket>()
   async function checkAuth() {
     const token = localStorage.getItem("token")
     if (!token) {
@@ -57,27 +58,39 @@ export default function Home() {
     }
   }
 
-  // socket.on("welcome", (msg: string) => {
-  //   console.log("socket msg", msg)
-  // })
+  //component did mount use effect
   useEffect(() => {
     console.log("use effect home");
-    const socket = io(import.meta.env.VITE_BASE)
-    // socket.connect()
-    socket.on("welcome", (msg: string) => {
-      console.log("socket msg", msg)
-    })
-    checkAuth();
-    return () => {
-      console.log("home cleanup function triggered")
+    async function process() {
+      await checkAuth();
+      setSocket(io(import.meta.env.VITE_BASE))
+    }
+    process()
+
+    return function() {
+      console.log("why is home cleanup function triggered")
+      if (!socket) return
+      socket.emit("remove_user",
+        userData._id
+      )
       socket.disconnect()
     }
   }, []);
 
-  function disconn() {
-    console.log("socket disconnect function")
-    socket.disconnect()
-  }
+  useEffect(() => {
+    if (!socket) return
+    console.log("socket useEffect", socket)
+    socket.on("welcome", (msg: string) => {
+      console.log("socket msg", msg)
+    })
+
+    socket.on('connect', () => {
+      console.log("data socket.on connect", socket.id)
+      socket.emit("log_user", {
+        [userData._id]: socket.id,
+      })
+    })
+  }, [socket])
 
   return (
     <>
