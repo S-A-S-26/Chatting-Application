@@ -6,18 +6,40 @@ import { TProfile } from '../Interfaces/Interface'
 import ExpandableSearch from './ExpandableSearch'
 import SearchResults from './SearchResults'
 import { useSelector } from 'react-redux'
+import { IRootState } from '@/store'
+import { Socket } from 'socket.io-client'
 
-export default function ContactList({ showProfile, userData }: { showProfile: boolean, userData: TProfile }) {
+export default function ContactList({ showProfile, userData, socket }: { showProfile: boolean, userData: TProfile, socket: Socket | undefined }) {
     const det = ["Sujit Sutar", "Sagar Rite", "Shyam Sutar", "Geeta Sutar", "John Doe", "George Bush", "Putin"]
     const [activeChatls, setActiveChatls] = useState<TProfile[]>([])
     const [contactList, setContactList] = useState<[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
-    const sliceData = useSelector((state) => state.user)
+    const [onlineUsersList, setOnlineUsers] = useState<object>([])
+
+    const sliceData = useSelector((state: IRootState) => state.user)
 
     useEffect(() => {
         console.log("useEffect from Contactlist fetching profiles")
         fetchActiveContacts()
     }, [])
+
+    useEffect(() => {
+        console.log("contact list socket useEffect")
+        if (!socket) return
+        console.log("contact list socket init")
+        socket.on("user_online_status", (val: {}) => {
+            console.log("user online status", val)
+            setOnlineUsers(val)
+        })
+        async function initOnlineStatus() {
+            console.log("initOnlineStatus")
+            let res = await fetch(import.meta.env.VITE_BASE_URL + '/getonlineusers')
+            let data = await res.json()
+            console.log("online data fetch", data)
+            setOnlineUsers(data.online)
+        }
+        initOnlineStatus()
+    }, [socket])
 
     async function searchPhone(value: string) {
         let res = await fetch(import.meta.env.VITE_BASE_URL + "/searchuser?phone=" + value)
@@ -58,7 +80,7 @@ export default function ContactList({ showProfile, userData }: { showProfile: bo
                                                 <span className='tracking-tighter'>Pinned Message</span>
                                             </p>
                                             {activeChatls.map((val, idx) => (
-                                                <ProfileStrip key={idx} {...{ val }} />
+                                                <ProfileStrip key={idx} {...{ val, onlineUsersList }} />
                                             ))}
                                         </div>
                                     }</>
@@ -67,9 +89,11 @@ export default function ContactList({ showProfile, userData }: { showProfile: bo
                                             <span><MessageSquareText className='text-gray-500' strokeWidth={1} size={19} /></span>
                                             <span className='tracking-tighter'>All Messages</span>
                                         </p>
-                                        {activeChatls.map((val, idx) => (
-                                            < ProfileStrip key={idx} {...{ val }} />
-                                        ))}
+                                        {activeChatls.map((val, idx) => {
+                                            if (sliceData._id != val._id) {
+                                                return < ProfileStrip key={idx} {...{ val, onlineUsersList }} />
+                                            }
+                                        })}
                                     </div>
                                 </div>
                             </>

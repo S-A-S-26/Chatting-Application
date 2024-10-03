@@ -13,6 +13,7 @@ const updateUserData = require('../controller/updateUserData')
 const searchUser = require('../controller/searchUser')
 const userChatProfiles = require('../controller/userChatProfiles')
 const createChat = require('../controller/createChat')
+const { online } = require('../socket/socket')
 
 
 router.post('/register', validate(regVal), register)
@@ -24,5 +25,6 @@ router.patch('/updatestatus', jwtAuth, validate(statusVal), updateUserData.statu
 router.get('/searchuser', searchUser)
 router.get('/userchatprofiles', userChatProfiles)
 router.post('/sendmessage', createChat)
+router.get('/getonlineusers', (req, res) => res.status(200).json({ online }))
 
 module.exports = router;

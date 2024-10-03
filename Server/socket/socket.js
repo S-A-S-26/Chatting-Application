@@ -1,5 +1,5 @@
-let online = new Object
-
+const online = new Object
+console.log("socket file ran online newly assigned")
 function deleteKeysByValue(obj, valueToDelete) {
     console.log("deletekeyby value", online)
     for (const key in obj) {
@@ -11,6 +11,11 @@ function deleteKeysByValue(obj, valueToDelete) {
 }
 
 function initiateSocket(io) {
+
+    function sendOnlineStatuses(socket) {
+        socket.broadcast.emit("user_online_status", online)
+    }
+
     io.on('connection', (socket) => {
         console.log("Socket running sucessfully", socket.id)
 
@@ -20,8 +25,9 @@ function initiateSocket(io) {
 
         socket.on('log_user', (val) => {
             console.log("log_user", val)
-            online = { ...online, ...val }
+            Object.assign(online, val);
             console.log("online after upd", online)
+            sendOnlineStatuses(socket)
         })
 
         socket.on('remove_user', (val) => {
@@ -33,6 +39,7 @@ function initiateSocket(io) {
         socket.on('disconnect', () => {
             console.log("Socket Disconnected", socket.id)
             deleteKeysByValue(online, socket.id)
+            sendOnlineStatuses(socket)
             socket.broadcast.emit("welcome", `Socket has left : ${socket.id}`)
             socket.removeAllListeners();
         })
@@ -40,4 +47,4 @@ function initiateSocket(io) {
 
 }
 
-module.exports = initiateSocket
+module.exports = { initiateSocket, online }

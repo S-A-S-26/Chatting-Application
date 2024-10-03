@@ -12,7 +12,7 @@ const io = new Server(http_server, {
 const cors = require('cors');
 const router = require('./router/router')
 const path = require('path');
-const initiateSocket = require('./socket/socket')
+const { initiateSocket } = require('./socket/socket')
 console.log('path join', path.join(__dirname, 'uploads'))
 
 

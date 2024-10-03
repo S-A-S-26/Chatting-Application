@@ -97,7 +97,7 @@ export default function Home() {
       {/* <button onClick={disconn}>disconn</button> */}
       <div className="flex grow relative">
         <div className="w-full md:w-6/12 xl:w-4/12 2xl-3/12">
-          <ContactList {...{ showProfile, userData }} />
+          <ContactList {...{ showProfile, userData, socket }} />
         </div>
         <div className="hidden border md:w-6/12 md:block xl:w-8/12 2xl-9/12">
           <Message {...{ showProfile, setProfileStatus }} />

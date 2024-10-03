@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { ReactHTMLElement, useEffect, useState } from 'react'
 import TopProfile from './TopProfile'
 import { Image, LogOut, Send, Settings, Smile } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
@@ -11,7 +11,9 @@ import Messages from './Messages'
 export default function Message({ setProfileStatus, showProfile }: { showProfile: boolean, setProfileStatus: (value: boolean) => void }) {
   const Navigate = useNavigate()
 
+  const loggedUser = useSelector((state: IRootState) => state.user)
   const messageProfileData = useSelector((state: IRootState) => state.messageProfileData)
+  const [typedMessage, setTypedMessage] = useState<string>('')
 
 
   //this is just for dev purpose to check what value i get
@@ -23,6 +25,35 @@ export default function Message({ setProfileStatus, showProfile }: { showProfile
     localStorage.removeItem('token')
     Navigate('/register')
   }
+
+  async function sendMessagetoServer() {
+    console.log("typed message", typedMessage)
+    const token = localStorage.getItem("token")
+    let payload = {
+      "participants": [
+        loggedUser._id, messageProfileData._id
+      ],
+      "message": {
+        "sender": loggedUser._id,
+        "content": typedMessage
+      }
+    }
+    console.log("payload", payload)
+    let res = await fetch(import.meta.env.VITE_BASE_URL + '/sendmessage', {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': "Bearer " + token
+      },
+      body: JSON.stringify(payload),
+    })
+    let data = await res.json()
+    console.log("Sent Message res", data)
+    if (res.status == 200) {
+    }
+    setTypedMessage('')
+  }
+
   return (
     <>
       <div className='h-full flex flex-col'>
@@ -56,11 +87,11 @@ export default function Message({ setProfileStatus, showProfile }: { showProfile
               <button className='bg-transparent p-0 border-none' onClick={logout}>
                 <Smile strokeWidth={1.25} size={22} className='text-gray-400 hover:text-gray-500' />
               </button>
-              <input className='grow bg-mybackground outline-none text-gray-500 text-sm' placeholder='Type a message' />
+              <input className='grow bg-mybackground outline-none text-gray-500 text-sm' placeholder='Type a message' onChange={(e) => setTypedMessage(e.target.value)} value={typedMessage} />
               <button className='bg-transparent p-0 border-none' onClick={logout}>
                 <Image strokeWidth={1.25} size={22} className='text-gray-400 hover:text-gray-500' />
               </button>
-              <button className='bg-transparent p-0 border-none' onClick={logout}>
+              <button className='bg-transparent p-0 border-none' onClick={sendMessagetoServer}>
                 <Send strokeWidth={1.25} size={22} className='text-gray-400 hover:text-gray-500' />
               </button>
             </div>
