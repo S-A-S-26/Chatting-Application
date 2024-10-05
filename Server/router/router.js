@@ -14,6 +14,7 @@ const searchUser = require('../controller/searchUser')
 const userChatProfiles = require('../controller/userChatProfiles')
 const createChat = require('../controller/createChat')
 const { online } = require('../socket/socket')
+const fetchChat = require('../controller/fetchChat')
 
 
 router.post('/register', validate(regVal), register)
@@ -26,5 +27,6 @@ router.get('/searchuser', searchUser)
 router.get('/userchatprofiles', userChatProfiles)
 router.post('/sendmessage', createChat)
 router.get('/getonlineusers', (req, res) => res.status(200).json({ online }))
+router.post('/fetchchats', fetchChat)
 
 module.exports = router;

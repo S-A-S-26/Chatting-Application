@@ -100,7 +100,7 @@ export default function Home() {
           <ContactList {...{ showProfile, userData, socket }} />
         </div>
         <div className="hidden border md:w-6/12 md:block xl:w-8/12 2xl-9/12">
-          <Message {...{ showProfile, setProfileStatus }} />
+          <Message {...{ showProfile, setProfileStatus, socket }} />
         </div>
         <div className="md:hidden bottom-0 left-0 right-0 h-20 fixed border-secondary border-t-2">
           <MobileFooter />

@@ -1,4 +1,5 @@
 const online = new Object
+let socketio;
 console.log("socket file ran online newly assigned")
 function deleteKeysByValue(obj, valueToDelete) {
     console.log("deletekeyby value", online)
@@ -11,7 +12,7 @@ function deleteKeysByValue(obj, valueToDelete) {
 }
 
 function initiateSocket(io) {
-
+    socketio = io
     function sendOnlineStatuses(socket) {
         socket.broadcast.emit("user_online_status", online)
     }
@@ -47,4 +48,4 @@ function initiateSocket(io) {
 
 }
 
-module.exports = { initiateSocket, online }
+module.exports = { initiateSocket, online, getInstanceIo: () => socketio }

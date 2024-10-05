@@ -7,19 +7,50 @@ import { IRootState } from '../store'
 import { Skeleton } from '@/components/ui/skeleton'
 import ProfileSkeleton from './ProfileSkeleton'
 import Messages from './Messages'
+import { TChatData } from '../Interfaces/Interface'
+import { Socket } from 'socket.io-client'
 
-export default function Message({ setProfileStatus, showProfile }: { showProfile: boolean, setProfileStatus: (value: boolean) => void }) {
+export default function Message({ setProfileStatus, showProfile, socket }: { showProfile: boolean, setProfileStatus: (value: boolean) => void, socket: Socket | undefined }) {
   const Navigate = useNavigate()
 
   const loggedUser = useSelector((state: IRootState) => state.user)
   const messageProfileData = useSelector((state: IRootState) => state.messageProfileData)
   const [typedMessage, setTypedMessage] = useState<string>('')
-
+  const [chats, setChats] = useState<TChatData | null>(null)
 
   //this is just for dev purpose to check what value i get
   useEffect(() => {
     console.log('messageProfileData', messageProfileData)
+    async function fetchUserChat() {
+      if (!messageProfileData._id) return
+      let res = await fetch(import.meta.env.VITE_BASE_URL + "/fetchchats", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          participants: [loggedUser._id, messageProfileData._id],
+        }),
+      });
+      let chatData = await res.json()
+      console.log("chatData", chatData)
+      if (chatData) {
+        setChats(chatData)
+      }
+    }
+    fetchUserChat()
   }, [messageProfileData])
+
+  useEffect(() => {
+    if (!socket) return
+    socket.on('incomingMsg', (val) => {
+      console.log("incoming Msg", chats)
+      if (!chats) return
+      setChats({
+        ...chats, messages: [...chats.messages, val]
+      })
+    })
+  }, [socket, chats])
 
   function logout() {
     localStorage.removeItem('token')
@@ -30,6 +61,8 @@ export default function Message({ setProfileStatus, showProfile }: { showProfile
     console.log("typed message", typedMessage)
     const token = localStorage.getItem("token")
     let payload = {
+      "sentBy": loggedUser._id,
+      "receiver": messageProfileData._id,
       "participants": [
         loggedUser._id, messageProfileData._id
       ],
@@ -50,8 +83,15 @@ export default function Message({ setProfileStatus, showProfile }: { showProfile
     let data = await res.json()
     console.log("Sent Message res", data)
     if (res.status == 200) {
+      if (chats) {
+        setChats({
+          ...chats, messages: [...chats.messages, { sender: loggedUser._id, content: typedMessage }]
+        })
+      }
+      setTypedMessage('')
+
     }
-    setTypedMessage('')
+    console.log("chat", chats)
   }
 
   return (
@@ -79,9 +119,17 @@ export default function Message({ setProfileStatus, showProfile }: { showProfile
           </div>
         </div>
         <div className='bg-mybackground grow flex flex-col'>
-          <div className='grow'>
-            {/* <Messages /> */}
-          </div>
+          <div className='h-[calc(100vh-12rem)] overflow-x-auto'>
+            {/* {chats && chats.messages.map((val: { content: string, sender: string }, idx: number) => { */}
+            {/*   console.log("idx", idx) */}
+            {/*   let content = val.content */}
+            {/*   return <div key={idx}> */}
+            {/*     {val.content} */}
+            {/*   </div> */}
+
+            {/* })} */}
+            <Messages {...{ chats }} />
+          </div >
           <div className='h-20 flex items-center justify-center bg-white'>
             <div className='flex grow gap-3 mx-4 px-8 h-12 items-center rounded-full bg-mybackground'>
               <button className='bg-transparent p-0 border-none' onClick={logout}>

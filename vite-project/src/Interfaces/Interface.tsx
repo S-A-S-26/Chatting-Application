@@ -1,25 +1,29 @@
-export interface TLogin{
+export interface TLogin {
     phone: string;
     password: string;
 }
 
-export interface TUser extends TLogin{
+export interface TUser extends TLogin {
     username: string;
-    
+
 }
 
-export interface TProfile{
+export interface TProfile {
     _id: string,
     username: string,
     phone: string,
-    status:string,
-    profile:string,
-    pinned:[],
-  }
+    status: string,
+    profile: string,
+    pinned: [],
+}
 
-export interface TUpdateProfile{
+export interface TUpdateProfile {
     _id: string,
     username?: string,
     status?: string,
-  
+
+}
+
+export interface TChatData {
+    messages: []
 }

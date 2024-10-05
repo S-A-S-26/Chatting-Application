@@ -58,3 +58,5 @@ http_server.listen(port, function() {
     console.log('Press Ctrl + C to stop the server')
     connectDb()
 })
+
+module.exports = { io }

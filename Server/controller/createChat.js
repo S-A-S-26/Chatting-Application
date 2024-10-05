@@ -1,4 +1,7 @@
 const Chat = require('../model/chat')
+const { io } = require('../app')
+const { getInstanceIo, online } = require('../socket/socket')
+
 
 async function createChat(req, res) {
     console.log("create Chat req body", req.body)
@@ -16,7 +19,8 @@ async function createChat(req, res) {
                 })
             }
             console.log('chat', chat)
-            await chat.save()
+            // await chat.save()
+            sendDataToReceipient(req.body.receiver, req.body.message)
             res.status(200).json({ msg: "message sent successfully" })
         } else {
             res.status(500).json({
@@ -31,4 +35,12 @@ async function createChat(req, res) {
     }
 }
 
+async function sendDataToReceipient(receiver, message) {
+    console.log("paritcipants", receiver, message)
+    const socketio = getInstanceIo()
+    const sid = online[receiver]
+    // console.log("sendDataToReceipient", socketio)
+    socketio.emit("welcome", "Socket from chat responding")
+    socketio.to(sid).emit('incomingMsg', message)
+}
 module.exports = createChat
