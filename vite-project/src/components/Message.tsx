@@ -16,7 +16,7 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
   const loggedUser = useSelector((state: IRootState) => state.user)
   const messageProfileData = useSelector((state: IRootState) => state.messageProfileData)
   const [typedMessage, setTypedMessage] = useState<string>('')
-  const [chats, setChats] = useState<TChatData | null>(null)
+  const [chats, setChats] = useState<TChatData>({messages:[]})
 
   //this is just for dev purpose to check what value i get
   useEffect(() => {
@@ -33,24 +33,34 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
         }),
       });
       let chatData = await res.json()
-      console.log("chatData", chatData)
+      console.log("chatData from useEffect fetch in messages", chatData)
       if (chatData) {
         setChats(chatData)
+      }else{
+        setChats({messages:[]})
       }
     }
     fetchUserChat()
   }, [messageProfileData])
 
+  useEffect(()=>{
+    console.log("monitor messageProfileData",messageProfileData)
+  },[messageProfileData])
+
   useEffect(() => {
+    console.log("use effect for socket incoming init ",socket,messageProfileData)
     if (!socket) return
     socket.on('incomingMsg', (val) => {
-      console.log("incoming Msg", chats)
+      console.log("incoming Msg", chats,val)
+      console.log("previous msg in chat",chats)
       if (!chats) return
-      setChats({
-        ...chats, messages: [...chats.messages, val]
+      console.log("ids",val.sender , messageProfileData)
+      if (val.sender == messageProfileData._id){
+        setChats({ ...chats, messages: [...chats.messages, val.message]
       })
+      }
     })
-  }, [socket, chats])
+  }, [socket])
 
   function logout() {
     localStorage.removeItem('token')

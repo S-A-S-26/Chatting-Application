@@ -8,9 +8,9 @@ async function createChat(req, res) {
     try {
         if (req.body) {
             let chat = await Chat.findOne({ participants: { $all: req.body.participants } })
-            console.log("existing chat", chat)
+            // console.log("existing chat", chat)
             if (chat) {
-                console.log("req.body.messages", req.body.message)
+                // console.log("req.body.messages", req.body.message)
                 chat.messages.push(req.body.message)
             } else {
                 chat = new Chat({
@@ -18,9 +18,9 @@ async function createChat(req, res) {
                     "messages": [req.body.message]
                 })
             }
-            console.log('chat', chat)
+            // console.log('chat', chat)
             // await chat.save()
-            sendDataToReceipient(req.body.receiver, req.body.message)
+            sendDataToReceipient(req.body.sentBy,req.body.receiver, req.body.message)
             res.status(200).json({ msg: "message sent successfully" })
         } else {
             res.status(500).json({
@@ -35,12 +35,12 @@ async function createChat(req, res) {
     }
 }
 
-async function sendDataToReceipient(receiver, message) {
+async function sendDataToReceipient(sender,receiver, message) {
     console.log("paritcipants", receiver, message)
     const socketio = getInstanceIo()
     const sid = online[receiver]
     // console.log("sendDataToReceipient", socketio)
-    socketio.emit("welcome", "Socket from chat responding")
-    socketio.to(sid).emit('incomingMsg', message)
+    // socketio.emit("welcome", "Socket from chat responding")
+    socketio.to(sid).emit('incomingMsg',{ message,sender})
 }
 module.exports = createChat

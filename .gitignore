@@ -2,4 +2,4 @@ Server/.env
 vite-project/.env
 **/.env
 nodemodules
-
+Server/uploads
