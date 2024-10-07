@@ -16,7 +16,7 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
   const loggedUser = useSelector((state: IRootState) => state.user)
   const messageProfileData = useSelector((state: IRootState) => state.messageProfileData)
   const [typedMessage, setTypedMessage] = useState<string>('')
-  const [chats, setChats] = useState<TChatData>({messages:[]})
+  const [chats, setChats] = useState<TChatData>({ messages: [] })
 
   //this is just for dev purpose to check what value i get
   useEffect(() => {
@@ -36,31 +36,39 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
       console.log("chatData from useEffect fetch in messages", chatData)
       if (chatData) {
         setChats(chatData)
-      }else{
-        setChats({messages:[]})
+      } else {
+        setChats({ messages: [] })
       }
     }
     fetchUserChat()
   }, [messageProfileData])
 
-  useEffect(()=>{
-    console.log("monitor messageProfileData",messageProfileData)
-  },[messageProfileData])
+  useEffect(() => {
+    console.log("monitor messageProfileData", messageProfileData)
+  }, [messageProfileData])
 
   useEffect(() => {
-    console.log("use effect for socket incoming init ",socket,messageProfileData)
-    if (!socket) return
-    socket.on('incomingMsg', (val) => {
-      console.log("incoming Msg", chats,val)
-      console.log("previous msg in chat",chats)
-      if (!chats) return
-      console.log("ids",val.sender , messageProfileData)
-      if (val.sender == messageProfileData._id){
-        setChats({ ...chats, messages: [...chats.messages, val.message]
+    console.log("use effect for socket incoming init ", socket, messageProfileData)
+    if (socket) {
+      socket.on('incomingMsg', (val) => {
+        console.log("incoming Msg", chats, val)
+        console.log("previous msg in chat", chats)
+        if (!chats) return
+        console.log("ids", val.sender, messageProfileData)
+        if (val.sender == messageProfileData._id) {
+          setChats({
+            ...chats, messages: [...chats.messages, val.message]
+          })
+        }
       })
+    }
+    return () => {
+      console.log("incoming socket cleanup")
+      if (socket) {
+        socket.off('incomingMsg')
       }
-    })
-  }, [socket])
+    }
+  }, [socket, messageProfileData, chats])
 
   function logout() {
     localStorage.removeItem('token')
@@ -95,7 +103,7 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
     if (res.status == 200) {
       if (chats) {
         setChats({
-          ...chats, messages: [...chats.messages, { sender: loggedUser._id, content: typedMessage }]
+          ...chats, messages: [...chats.messages, { sender: loggedUser._id, content: typedMessage, timestamp: new Date().toISOString() }]
         })
       }
       setTypedMessage('')

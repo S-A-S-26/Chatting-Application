@@ -19,8 +19,8 @@ async function createChat(req, res) {
                 })
             }
             // console.log('chat', chat)
-            // await chat.save()
-            sendDataToReceipient(req.body.sentBy,req.body.receiver, req.body.message)
+            await chat.save()
+            sendDataToReceipient(req.body.sentBy, req.body.receiver, req.body.message)
             res.status(200).json({ msg: "message sent successfully" })
         } else {
             res.status(500).json({
@@ -35,12 +35,13 @@ async function createChat(req, res) {
     }
 }
 
-async function sendDataToReceipient(sender,receiver, message) {
+async function sendDataToReceipient(sender, receiver, message) {
     console.log("paritcipants", receiver, message)
     const socketio = getInstanceIo()
     const sid = online[receiver]
+    message.timestamp = new Date()
     // console.log("sendDataToReceipient", socketio)
     // socketio.emit("welcome", "Socket from chat responding")
-    socketio.to(sid).emit('incomingMsg',{ message,sender})
+    socketio.to(sid).emit('incomingMsg', { message, sender })
 }
 module.exports = createChat
