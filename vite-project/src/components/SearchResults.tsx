@@ -2,7 +2,7 @@ import { Frown, Search } from 'lucide-react'
 import React from 'react'
 import ProfileStrip from './ProfileStrip'
 
-export default function SearchResults({ contactList }: { contactList: [] }) {
+export default function SearchResults({ contactList, onlineUsersList }: { contactList: [], onlineUsersList: [] }) {
     return (
         <>
             <p className='flex justify-start items-center gap-2 py-4 text-gray-400 px-8 text-sm'>
@@ -16,9 +16,10 @@ export default function SearchResults({ contactList }: { contactList: [] }) {
             </p>
         </div> */}
             {
-                contactList.map((val, idx) => (
-                    <ProfileStrip key={idx} {...{ val }} />
-                ))
+                contactList.map((val, idx) => {
+                    console.log("search res contactls val", val)
+                    return <ProfileStrip key={idx} {...{ val, onlineUsersList }} />
+                })
             }
         </>
     )

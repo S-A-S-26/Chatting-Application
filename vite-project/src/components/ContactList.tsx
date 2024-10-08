@@ -70,9 +70,9 @@ export default function ContactList({ showProfile, userData, socket }: { showPro
                         <ExpandableSearch {...{ searchPhone, setShowSearch, setContactList }} />
                     </div>
                     {
-                        showSearch ? <SearchResults {...{ contactList }} /> :
+                        showSearch ? <SearchResults {...{ contactList, onlineUsersList }} /> :
                             <>
-                                <div className='overflow-scroll max-h-[calc(100vh-7rem)]'>
+                                <div className='overflow-scroll max-h-[calc(100vh-7rem)] no-scroll'>
                                     <>{sliceData.pinned.length > 0 &&
                                         <div>
                                             <p className='flex justify-start items-center gap-2 py-4 text-gray-400 px-8 text-sm'>
