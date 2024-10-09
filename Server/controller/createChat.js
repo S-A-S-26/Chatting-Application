@@ -19,7 +19,7 @@ async function createChat(req, res) {
                 })
             }
             // console.log('chat', chat)
-            await chat.save()
+            // await chat.save()
             sendDataToReceipient(req.body.sentBy, req.body.receiver, req.body.message)
             res.status(200).json({ msg: "message sent successfully" })
         } else {

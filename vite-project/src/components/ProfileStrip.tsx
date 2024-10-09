@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMessageUser } from "../store/utils/messageprofile"
 import { TProfile } from '../Interfaces/Interface';
 import { IRootState } from '@/store';
+import dayjs from 'dayjs';
 
 export default function ProfileStrip({ val, onlineUsersList }: { val: TProfile, onlineUsersList: Object }) {
     const dispatch = useDispatch()
@@ -43,7 +44,8 @@ export default function ProfileStrip({ val, onlineUsersList }: { val: TProfile, 
                         {val.username}
                     </div>
                     <div className='text-gray-500 text-sm'>
-                        last seen 10 mins ago
+                        {/* last seen 10 mins ago */}
+                        {val.lastSeen ? val.lastSeen : 'last seen 10 mins ago'}
                     </div>
                 </div>
                 <div className='grid grid-rows-2 justify-start'>

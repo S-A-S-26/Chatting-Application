@@ -1,19 +1,24 @@
 import { useSelector } from 'react-redux'
 import { TChatData } from '../Interfaces/Interface'
 import { IRootState } from '@/store'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import date from 'date-and-time';
+import React from 'react';
 
-export default function Messages({ chats }: { chats: TChatData }) {
+const Messages = React.memo(function({ chats }: { chats: TChatData }) {
     const loggedUser = useSelector((state: IRootState) => state.user)
     const prevDate = useRef<undefined | string>(undefined)
     const currentDate = useRef<undefined | string>(undefined)
 
     const [dateInfo, setDateInfo] = useState(null)
 
+    useEffect(() => {
+        console.log("use Effect ran for prevDate reset")
+        prevDate.current = undefined
+    }, [chats])
+
     function getTime(timestamp: string, flag = true) {
 
-        console.log("flag/timestamp", flag, timestamp, prevDate.current)
         let modDate = null
         let fmtDate;
         // Create a new Date object
@@ -21,6 +26,9 @@ export default function Messages({ chats }: { chats: TChatData }) {
 
         // Extract date components (YYYY-MM-DD)
         const dateobj = dateObject.toISOString().split('T')[0];
+        if (!flag) {
+            console.log("currentdate/previous date", dateobj, prevDate.current)
+        }
         if ((prevDate.current != dateobj) || !prevDate.current) {
             modDate = dateobj
             fmtDate = date.format(dateObject, 'MMMM D,YYYY')
@@ -53,7 +61,7 @@ export default function Messages({ chats }: { chats: TChatData }) {
         <>
             <div className='h-full py-8'>
                 {chats && chats.messages.map((val: { content: string, sender: string, timestamp: string }, idx: number) => {
-                    console.log("idx", idx)
+                    console.log("msg", val.content)
                     return (
                         <div key={idx}>
                             {getTime(val.timestamp, false) ? (
@@ -64,8 +72,8 @@ export default function Messages({ chats }: { chats: TChatData }) {
                                 </>
                             ) : null}
                             <div className={`flex my-4 mx-4 ${loggedUser._id == val.sender ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-[50%] p-3  rounded-xl flex gap-4 ${loggedUser._id == val.sender ? 'bg-mysecondary text-white rounded-tr-none' : 'rounded-tl-none bg-white'}`} >
-                                    <div className='text-sm'>
+                                <div className={`max-w-[80%] p-3  rounded-xl flex gap-4 ${loggedUser._id == val.sender ? 'bg-mysecondary text-white rounded-tr-none' : 'rounded-tl-none bg-white'}`} >
+                                    <div className='text-sm text-left'>
                                         {val.content}
                                     </div>
                                     <div className={`${loggedUser._id == val.sender ? 'text-white' : 'text-gray-600'} text-xs grid items-end`} >
@@ -82,4 +90,5 @@ export default function Messages({ chats }: { chats: TChatData }) {
             </div >
         </>
     )
-}
+})
+export default Messages

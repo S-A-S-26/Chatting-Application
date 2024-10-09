@@ -15,6 +15,7 @@ export interface TProfile {
     status: string,
     profile: string,
     pinned: [],
+    lastSeen: string,
 }
 
 export interface TUpdateProfile {

@@ -1,11 +1,15 @@
 const online = new Object
 let socketio;
+
+const markLastOnline = require('../controller/markLastOnline')
+
 console.log("socket file ran online newly assigned")
 function deleteKeysByValue(obj, valueToDelete) {
     console.log("deletekeyby value", online)
     for (const key in obj) {
         if (obj[key] === valueToDelete) {
             delete obj[key];
+            markLastOnline(key)
         }
     }
     console.log("online after del", online)

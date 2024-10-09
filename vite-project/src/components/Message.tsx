@@ -112,6 +112,13 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
     console.log("chat", chats)
   }
 
+  function sendMessageOnEnter(e: React.KeyboardEvent<HTMLInputElement>): void {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Prevents the default form submission behavior
+      sendMessagetoServer();
+    }
+  }
+
   return (
     <>
       <div className='h-full flex flex-col'>
@@ -153,7 +160,7 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
               <button className='bg-transparent p-0 border-none' onClick={logout}>
                 <Smile strokeWidth={1.25} size={22} className='text-gray-400 hover:text-gray-500' />
               </button>
-              <input className='grow bg-mybackground outline-none text-gray-500 text-sm' placeholder='Type a message' onChange={(e) => setTypedMessage(e.target.value)} value={typedMessage} />
+              <input className='grow bg-mybackground outline-none text-gray-500 text-sm' placeholder='Type a message' onChange={(e) => setTypedMessage(e.target.value)} value={typedMessage} onKeyDown={(e) => sendMessageOnEnter(e)} />
               <button className='bg-transparent p-0 border-none' onClick={logout}>
                 <Image strokeWidth={1.25} size={22} className='text-gray-400 hover:text-gray-500' />
               </button>

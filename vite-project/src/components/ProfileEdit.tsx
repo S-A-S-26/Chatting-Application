@@ -93,7 +93,7 @@ export default function ProfileEdit({ userData }: { userData: TProfile }) {
                         <span>Profile</span>
                     </h2>
                 </div>
-                <div className='overflow-scroll max-h-[calc(100vh-7rem)] bg-mybackground grow text-left'>
+                <div className='overflow-scroll max-h-[calc(100vh-7rem)] bg-mybackground grow text-left no-scroll'>
                     <div className='bg-white flex flex-col place-items-center h-full'>
                         <label className="transition-all duration-1000 rounded-full overflow-hidden h-[250px] w-[250px] border-none bg-transparent relative hover:after:content-['Change\0020Picture'] after:absolute hover:after:text-gray-700 after:-inset-1 hover:after:bg-gray-200 hover:after:opacity-40 after:grid after:items-center after:underline bg-transparent text-center my-4 mt-6">
                             <input hidden type='file' accept='image' onChange={changePhoto} />
