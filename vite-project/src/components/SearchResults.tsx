@@ -1,8 +1,11 @@
 import { Frown, Search } from 'lucide-react'
 import React from 'react'
 import ProfileStrip from './ProfileStrip'
+import { useSelector } from 'react-redux'
+import { IRootState } from '@/store'
 
 export default function SearchResults({ contactList, onlineUsersList }: { contactList: [], onlineUsersList: [] }) {
+    const sliceData = useSelector((state: IRootState) => state.user)
     return (
         <>
             <p className='flex justify-start items-center gap-2 py-4 text-gray-400 px-8 text-sm'>
@@ -16,9 +19,11 @@ export default function SearchResults({ contactList, onlineUsersList }: { contac
             </p>
         </div> */}
             {
-                contactList.map((val, idx) => {
+                contactList.map((val: { _id: string }, idx) => {
                     console.log("search res contactls val", val)
-                    return <ProfileStrip key={idx} {...{ val, onlineUsersList }} />
+                    if (sliceData._id != val._id) {
+                        return <ProfileStrip key={idx} {...{ val, onlineUsersList }} />
+                    }
                 })
             }
         </>

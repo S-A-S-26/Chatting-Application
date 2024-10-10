@@ -4,6 +4,7 @@ import { IRootState } from '@/store'
 import { useEffect, useRef, useState } from 'react'
 import date from 'date-and-time';
 import React from 'react';
+import { Check, CheckCheck } from 'lucide-react';
 
 const Messages = React.memo(function({ chats }: { chats: TChatData }) {
     const loggedUser = useSelector((state: IRootState) => state.user)
@@ -26,9 +27,9 @@ const Messages = React.memo(function({ chats }: { chats: TChatData }) {
 
         // Extract date components (YYYY-MM-DD)
         const dateobj = dateObject.toISOString().split('T')[0];
-        if (!flag) {
-            console.log("currentdate/previous date", dateobj, prevDate.current)
-        }
+        // if (!flag) {
+        //     console.log("currentdate/previous date", dateobj, prevDate.current)
+        // }
         if ((prevDate.current != dateobj) || !prevDate.current) {
             modDate = dateobj
             fmtDate = date.format(dateObject, 'MMMM D,YYYY')
@@ -51,7 +52,7 @@ const Messages = React.memo(function({ chats }: { chats: TChatData }) {
         if (flag) {
             return time
         } else {
-            console.log("modDate", modDate)
+            // console.log("modDate", modDate)
             currentDate.current = fmtDate
             return modDate
         }
@@ -61,7 +62,6 @@ const Messages = React.memo(function({ chats }: { chats: TChatData }) {
         <>
             <div className='h-full py-8'>
                 {chats && chats.messages.map((val: { content: string, sender: string, timestamp: string }, idx: number) => {
-                    console.log("msg", val.content)
                     return (
                         <div key={idx}>
                             {getTime(val.timestamp, false) ? (
@@ -80,6 +80,11 @@ const Messages = React.memo(function({ chats }: { chats: TChatData }) {
                                         <div>
                                             {val.timestamp ? getTime(val.timestamp) : ""}
                                         </div>
+                                        {loggedUser._id == val.sender &&
+                                            < div className='grid justify-end'>
+                                                {val.seen ? <CheckCheck size={16} /> : <Check className={`${loggedUser._id == val.sender ? 'text-white' : 'text-gray-400'}`} size={14} strokeWidth={3} />}
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>

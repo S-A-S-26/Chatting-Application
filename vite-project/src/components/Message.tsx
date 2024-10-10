@@ -18,6 +18,14 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
   const [typedMessage, setTypedMessage] = useState<string>('')
   const [chats, setChats] = useState<TChatData>({ messages: [] })
 
+  async function setMessageReadBy(message: { _id: string, content: string, sender: string, timestamp: string }) {
+    console.log("set message readby", message)
+    if (!socket) return
+    if (message) {
+      socket.emit("seenstatus", { chat_id: chats._id, message_id: message._id, receiver_id: messageProfileData._id })
+    }
+  }
+
   //this is just for dev purpose to check what value i get
   useEffect(() => {
     console.log('messageProfileData', messageProfileData)
@@ -36,6 +44,7 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
       console.log("chatData from useEffect fetch in messages", chatData)
       if (chatData) {
         setChats(chatData)
+        // setMessageReadBy()
       } else {
         setChats({ messages: [] })
       }
@@ -56,9 +65,11 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
         if (!chats) return
         console.log("ids", val.sender, messageProfileData)
         if (val.sender == messageProfileData._id) {
+          console.log("chat updated via incomingMsg")
           setChats({
             ...chats, messages: [...chats.messages, val.message]
           })
+          setMessageReadBy(val.message)
         }
       })
     }
@@ -69,6 +80,28 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
       }
     }
   }, [socket, messageProfileData, chats])
+
+  useEffect(() => {
+    if (!socket) return
+    socket.on("seenstatusset", (val) => {
+      console.log("seen status set", val)
+      setChats((prevChats) => {
+        const updatedChat = { ...prevChats };
+        const len = updatedChat.messages.length - 1;
+
+        if (len >= 0) {
+          updatedChat.messages[len].seen = true;
+        }
+
+        console.log("chat updated in seen statusset");
+        return updatedChat; // Return the updated state
+      });
+    })
+    return () => {
+      socket.off("seenstatusset")
+    }
+  }, [socket])
+
 
   function logout() {
     localStorage.removeItem('token')
@@ -102,6 +135,7 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
     console.log("Sent Message res", data)
     if (res.status == 200) {
       if (chats) {
+        console.log("send message to server update")
         setChats({
           ...chats, messages: [...chats.messages, { sender: loggedUser._id, content: typedMessage, timestamp: new Date().toISOString() }]
         })
@@ -111,6 +145,10 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
     }
     console.log("chat", chats)
   }
+
+  useEffect(() => {
+    console.log("chat after update typed msg", chats)
+  }, [chats])
 
   function sendMessageOnEnter(e: React.KeyboardEvent<HTMLInputElement>): void {
     if (e.key === 'Enter') {

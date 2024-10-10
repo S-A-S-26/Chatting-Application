@@ -39,6 +39,7 @@ export default function ContactList({ showProfile, userData, socket }: { showPro
             setOnlineUsers(data.online)
         }
         initOnlineStatus()
+        return () => { socket.off("user_online_status") }
     }, [socket])
 
     async function searchPhone(value: string) {

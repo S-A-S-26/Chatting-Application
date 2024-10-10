@@ -2,6 +2,7 @@ const online = new Object
 let socketio;
 
 const markLastOnline = require('../controller/markLastOnline')
+const addSeenStatus = require('../controller/addSeenStatus')
 
 console.log("socket file ran online newly assigned")
 function deleteKeysByValue(obj, valueToDelete) {
@@ -39,6 +40,11 @@ function initiateSocket(io) {
             console.log("remove user", val)
             delete online[val]
             console.log("online after del", online)
+        })
+
+        socket.on('seenstatus', (val) => {
+            console.log("seenstatus socket call")
+            addSeenStatus(val, socket, online[val.receiver_id])
         })
 
         socket.on('disconnect', () => {

@@ -26,5 +26,6 @@ export interface TUpdateProfile {
 }
 
 export interface TChatData {
-    messages: []
+    messages: [],
+    _id?: String,
 }
