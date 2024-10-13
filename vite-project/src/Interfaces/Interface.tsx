@@ -29,3 +29,13 @@ export interface TChatData {
     messages: [],
     _id?: String,
 }
+
+export interface TMessage {
+    _id: string,
+    chat_id: string,
+    message_id: string,
+    receiver_id: string,
+    sender: string,
+    seen: boolean,
+    content: string,
+}

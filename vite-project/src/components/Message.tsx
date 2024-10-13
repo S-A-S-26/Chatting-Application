@@ -1,4 +1,4 @@
-import React, { ReactHTMLElement, useEffect, useState } from 'react'
+import React, { ReactHTMLElement, useEffect, useRef, useState } from 'react'
 import TopProfile from './TopProfile'
 import { Image, LogOut, Send, Settings, Smile } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
@@ -7,7 +7,7 @@ import { IRootState } from '../store'
 import { Skeleton } from '@/components/ui/skeleton'
 import ProfileSkeleton from './ProfileSkeleton'
 import Messages from './Messages'
-import { TChatData } from '../Interfaces/Interface'
+import { TChatData, TMessage } from '../Interfaces/Interface'
 import { Socket } from 'socket.io-client'
 
 export default function Message({ setProfileStatus, showProfile, socket }: { showProfile: boolean, setProfileStatus: (value: boolean) => void, socket: Socket | undefined }) {
@@ -17,13 +17,44 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
   const messageProfileData = useSelector((state: IRootState) => state.messageProfileData)
   const [typedMessage, setTypedMessage] = useState<string>('')
   const [chats, setChats] = useState<TChatData>({ messages: [] })
+  const msgContainer = useRef<HTMLDivElement | null>(null)
 
-  async function setMessageReadBy(message: { _id: string, content: string, sender: string, timestamp: string }) {
+  function scrollMsgContainerbot() {
+    console.log("scroll bot")
+    if (!msgContainer.current) return
+    msgContainer.current.scrollTop = msgContainer.current?.scrollHeight
+  }
+
+  async function setMessageReadBy(message: TMessage | TMessage[], customChatId = undefined) {
     console.log("set message readby", message)
     if (!socket) return
     if (message) {
-      socket.emit("seenstatus", { chat_id: chats._id, message_id: message._id, receiver_id: messageProfileData._id })
+      if (!customChatId) {
+        socket.emit("seenstatus", { chat_id: chats._id, message_id: message._id, receiver_id: messageProfileData._id })
+      } else {
+        const msgIdList = (message as TMessage[])
+          .filter((val: TMessage) => !val.seen && val.sender == messageProfileData._id) // Filter messages that haven't been seen
+          .map((val: TMessage) => {
+            console.log(val.content)
+            return val._id
+          });
+        const postData = {
+          chatId: customChatId,
+          messageIds: msgIdList
+        }
+        console.log("postData", postData)
+        const res = await fetch(import.meta.env.VITE_BASE_URL + "/markseen", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(postData)
+        })
+        const data = await res.json()
+        console.log("res.data for seen messages multiple", data)
+      }
     }
+
   }
 
   //this is just for dev purpose to check what value i get
@@ -44,16 +75,12 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
       console.log("chatData from useEffect fetch in messages", chatData)
       if (chatData) {
         setChats(chatData)
-        // setMessageReadBy()
+        setMessageReadBy(chatData.messages, chatData._id)
       } else {
         setChats({ messages: [] })
       }
     }
     fetchUserChat()
-  }, [messageProfileData])
-
-  useEffect(() => {
-    console.log("monitor messageProfileData", messageProfileData)
   }, [messageProfileData])
 
   useEffect(() => {
@@ -73,6 +100,7 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
         }
       })
     }
+    scrollMsgContainerbot()
     return () => {
       console.log("incoming socket cleanup")
       if (socket) {
@@ -182,7 +210,7 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
           </div>
         </div>
         <div className='bg-mybackground grow flex flex-col'>
-          <div className='h-[calc(100vh-12rem)] overflow-x-auto'>
+          <div className='h-[calc(100vh-12rem)] overflow-x-auto' ref={msgContainer}>
             {/* {chats && chats.messages.map((val: { content: string, sender: string }, idx: number) => { */}
             {/*   console.log("idx", idx) */}
             {/*   let content = val.content */}
