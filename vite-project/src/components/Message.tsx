@@ -38,49 +38,62 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
             console.log(val.content)
             return val._id
           });
-        const postData = {
-          chatId: customChatId,
-          messageIds: msgIdList
+        if (msgIdList.length > 0) {
+          const postData = {
+            chatId: customChatId,
+            messageIds: msgIdList
+          }
+          console.log("postData", postData)
+          const res = await fetch(import.meta.env.VITE_BASE_URL + "/markseen", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(postData)
+          })
+          const data = await res.json()
+          console.log("res.data for seen messages multiple", data)
         }
-        console.log("postData", postData)
-        const res = await fetch(import.meta.env.VITE_BASE_URL + "/markseen", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(postData)
-        })
-        const data = await res.json()
-        console.log("res.data for seen messages multiple", data)
       }
     }
 
   }
 
+  async function fetchUserChat(disable = false) {
+    if (!messageProfileData._id) return
+    let res = await fetch(import.meta.env.VITE_BASE_URL + "/fetchchats", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        participants: [loggedUser._id, messageProfileData._id],
+      }),
+    });
+    let chatData = await res.json()
+    console.log("chatData from useEffect fetch in messages", chatData)
+    if (chatData) {
+      setChats(chatData)
+      if (!disable) {
+        setMessageReadBy(chatData.messages, chatData._id)
+      }
+    } else {
+      setChats({ messages: [] })
+    }
+  }
   //this is just for dev purpose to check what value i get
   useEffect(() => {
     console.log('messageProfileData', messageProfileData)
-    async function fetchUserChat() {
-      if (!messageProfileData._id) return
-      let res = await fetch(import.meta.env.VITE_BASE_URL + "/fetchchats", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          participants: [loggedUser._id, messageProfileData._id],
-        }),
-      });
-      let chatData = await res.json()
-      console.log("chatData from useEffect fetch in messages", chatData)
-      if (chatData) {
-        setChats(chatData)
-        setMessageReadBy(chatData.messages, chatData._id)
-      } else {
-        setChats({ messages: [] })
-      }
-    }
     fetchUserChat()
+    if (!socket) return
+    console.log("init live Update Seen ")
+    socket.on("liveUpdateSeen", (val) => {
+      console.log("live update Seen")
+      fetchUserChat(true)
+    })
+    return () => {
+      socket.off("liveUpdateSeen")
+    }
   }, [messageProfileData])
 
   useEffect(() => {
