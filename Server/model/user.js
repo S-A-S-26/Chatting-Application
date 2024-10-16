@@ -8,6 +8,7 @@ const userSchema = new Schema({
     profile: { type: String },
     status: { type: String, default: "Hey There" },
     pinned: { type: [String] },
+    unseenCount: { type: Number, default: 0 },
     lastSeen: { type: Date, required: true, default: Date.now() },
     createdAt: { type: Date, required: true, default: Date.now() },
 }, { timestamps: true })
