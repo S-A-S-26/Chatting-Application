@@ -47,6 +47,11 @@ function initiateSocket(io) {
             addSeenStatus(val, socket, online[val.receiver_id])
         })
 
+        socket.on('unseenCount', (val) => {
+            console.log("unseen Count", val)
+            socket.to(online[val.id]).emit("addCountUnseen", val.sender)
+        })
+
         socket.on('disconnect', () => {
             console.log("Socket Disconnected", socket.id)
             deleteKeysByValue(online, socket.id)

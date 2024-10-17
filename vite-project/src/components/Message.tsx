@@ -2,15 +2,15 @@ import React, { ReactHTMLElement, useEffect, useRef, useState } from 'react'
 import TopProfile from './TopProfile'
 import { Image, LogOut, Send, Settings, Smile } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { IRootState } from '../store'
 import { Skeleton } from '@/components/ui/skeleton'
 import ProfileSkeleton from './ProfileSkeleton'
 import Messages from './Messages'
-import { TChatData, TMessage } from '../Interfaces/Interface'
+import { TChatData, TMessage, TProfile } from '../Interfaces/Interface'
 import { Socket } from 'socket.io-client'
 
-export default function Message({ setProfileStatus, showProfile, socket }: { showProfile: boolean, setProfileStatus: (value: boolean) => void, socket: Socket | undefined }) {
+export default function Message({ setProfileStatus, showProfile, socket, activeChatls, setActiveChatls, onlineUsersList }: { showProfile: boolean, setProfileStatus: (value: boolean) => void, socket: Socket | undefined, activeChatls: TProfile, setActiveChatls: (value: []) => void, onlineUsersList: [] }) {
   const Navigate = useNavigate()
 
   const loggedUser = useSelector((state: IRootState) => state.user)
@@ -149,6 +149,11 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
     Navigate('/register')
   }
 
+  async function setUnseenCount(to) {
+    console.log("to", to)
+    socket.emit("unseenCount", { id: to, sender: loggedUser._id })
+  }
+
   async function sendMessagetoServer() {
     console.log("typed message", typedMessage)
     const token = localStorage.getItem("token")
@@ -182,7 +187,7 @@ export default function Message({ setProfileStatus, showProfile, socket }: { sho
         })
       }
       setTypedMessage('')
-
+      setUnseenCount(messageProfileData._id)
     }
     console.log("chat", chats)
   }

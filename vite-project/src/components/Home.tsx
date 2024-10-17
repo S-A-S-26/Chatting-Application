@@ -22,6 +22,8 @@ export default function Home() {
   });
 
   const [showProfile, setProfileStatus] = useState<boolean>(false)
+  const [activeChatls, setActiveChatls] = useState<TProfile[]>([])
+  const [onlineUsersList, setOnlineUsers] = useState<object | null>(null)
   const dispatch = useDispatch()
   const [socket, setSocket] = useState<Socket>()
   async function checkAuth() {
@@ -97,10 +99,10 @@ export default function Home() {
       {/* <button onClick={disconn}>disconn</button> */}
       <div className="flex grow relative">
         <div className="w-full md:w-6/12 xl:w-4/12 2xl-3/12">
-          <ContactList {...{ showProfile, userData, socket }} />
+          <ContactList {...{ showProfile, userData, socket, activeChatls, setActiveChatls, onlineUsersList, setOnlineUsers }} />
         </div>
         <div className="hidden border md:w-6/12 md:block xl:w-8/12 2xl-9/12">
-          <Message {...{ showProfile, setProfileStatus, socket }} />
+          <Message {...{ showProfile, setProfileStatus, socket, activeChatls, setActiveChatls, onlineUsersList }} />
         </div>
         <div className="md:hidden bottom-0 left-0 right-0 h-20 fixed border-secondary border-t-2">
           <MobileFooter />

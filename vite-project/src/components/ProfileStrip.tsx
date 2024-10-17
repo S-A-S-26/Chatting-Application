@@ -24,7 +24,7 @@ export default function ProfileStrip({ val, onlineUsersList }: { val: TProfile, 
         )
     }
 
-    return (
+    return (onlineUsersList &&
         <>
             <div className='flex px-7 py-2 items-center transition-all duration-500 hover:bg-gray-100' onClick={() => setMessageProfile(val)}>
                 <div className='border-2 h-[62px] w-[62px] rounded-full border-green-400 border-hidden relative'>
@@ -56,9 +56,11 @@ export default function ProfileStrip({ val, onlineUsersList }: { val: TProfile, 
                         </span>
                     </div>
                     <div className='flex justify-end'>
-                        <div className='text-white bg-red-500 rounded-full w-4 h-4 text-xs'>
-                            4
-                        </div>
+                        {val.unseenCount > 0 ?
+                            <div className='text-white bg-red-500 rounded-full w-4 h-4 text-xs'>
+                                {val.unseenCount}
+                            </div>
+                            : null}
                     </div>
                 </div>
             </div >

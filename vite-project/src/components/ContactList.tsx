@@ -9,19 +9,21 @@ import { useSelector } from 'react-redux'
 import { IRootState } from '@/store'
 import { Socket } from 'socket.io-client'
 
-export default function ContactList({ showProfile, userData, socket }: { showProfile: boolean, userData: TProfile, socket: Socket | undefined }) {
+export default function ContactList({ showProfile, userData, socket, activeChatls, setActiveChatls, onlineUsersList, setOnlineUsers }: { showProfile: boolean, userData: TProfile, socket: Socket | undefined, activeChatls: TProfile, setActiveChatls: (value: []) => void, onlineUsersList: {}, setOnlineUsers: (value: {}) => void }) {
     const det = ["Sujit Sutar", "Sagar Rite", "Shyam Sutar", "Geeta Sutar", "John Doe", "George Bush", "Putin"]
-    const [activeChatls, setActiveChatls] = useState<TProfile[]>([])
+    // const [activeChatls, setActiveChatls] = useState<TProfile[]>([])
     const [contactList, setContactList] = useState<[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
-    const [onlineUsersList, setOnlineUsers] = useState<object>([])
+    // const [onlineUsersList, setOnlineUsers] = useState<object>([])
 
     const sliceData = useSelector((state: IRootState) => state.user)
 
     useEffect(() => {
         console.log("useEffect from Contactlist fetching profiles")
+        if (sliceData._id == "") return
         fetchActiveContacts()
-    }, [])
+        console.log("slice data b4 call", sliceData)
+    }, [sliceData])
 
     useEffect(() => {
         console.log("contact list socket useEffect")
@@ -31,6 +33,22 @@ export default function ContactList({ showProfile, userData, socket }: { showPro
             console.log("user online status", val)
             setOnlineUsers(val)
         })
+        socket.on("addCountUnseen", (val: {}) => {
+            console.log("add count to Unseen", val)
+            setActiveChatls((prev: []) => {
+                const updatedChats = prev.map((chat) => {
+                    if (chat._id === val) {
+                        console.log("inside if condition of setActiveChatls");
+                        // Return a new object with the updated unseenCount
+                        return { ...chat, unseenCount: chat.unseenCount + 1 };
+                    }
+                    return chat; // Return other chats unchanged
+                });
+
+                console.log("return", updatedChats);
+                return updatedChats;
+            })
+        })
         async function initOnlineStatus() {
             console.log("initOnlineStatus")
             let res = await fetch(import.meta.env.VITE_BASE_URL + '/getonlineusers')
@@ -39,7 +57,10 @@ export default function ContactList({ showProfile, userData, socket }: { showPro
             setOnlineUsers(data.online)
         }
         initOnlineStatus()
-        return () => { socket.off("user_online_status") }
+        return () => {
+            socket.off("user_online_status")
+            socket.off("addCountUnseen")
+        }
     }, [socket])
 
     async function searchPhone(value: string) {
@@ -52,7 +73,7 @@ export default function ContactList({ showProfile, userData, socket }: { showPro
     }
 
     async function fetchActiveContacts() {
-        let res = await fetch(import.meta.env.VITE_BASE_URL + "/userchatprofiles")
+        let res = await fetch(import.meta.env.VITE_BASE_URL + "/userchatprofiles?user=" + sliceData._id)
         let data = await res.json()
         setActiveChatls(data)
         console.log("active contacts", data)
