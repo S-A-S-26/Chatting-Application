@@ -15,6 +15,7 @@ export default function ContactList({ showProfile, userData, socket, activeChatl
     const [contactList, setContactList] = useState<[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
     // const [onlineUsersList, setOnlineUsers] = useState<object>([])
+    const messageProfileData = useSelector((state: IRootState) => state.messageProfileData)
 
     const sliceData = useSelector((state: IRootState) => state.user)
 
@@ -37,8 +38,8 @@ export default function ContactList({ showProfile, userData, socket, activeChatl
             console.log("add count to Unseen", val)
             setActiveChatls((prev: []) => {
                 const updatedChats = prev.map((chat) => {
-                    if (chat._id === val) {
-                        console.log("inside if condition of setActiveChatls");
+                    if (chat._id === val && chat._id != messageProfileData._id) {
+                        console.log("inside if condition of setActiveChatls", chat._id, messageProfileData._id);
                         // Return a new object with the updated unseenCount
                         return { ...chat, unseenCount: chat.unseenCount + 1 };
                     }
@@ -62,6 +63,24 @@ export default function ContactList({ showProfile, userData, socket, activeChatl
             socket.off("addCountUnseen")
         }
     }, [socket])
+
+    useEffect(() => {
+        if (!messageProfileData) return
+        setActiveChatls((prev: []) => {
+            const updatedChats = prev.map((chat) => {
+                if (chat._id === messageProfileData._id) {
+                    console.log("close seen count if cond");
+                    // Return a new object with the updated unseenCount
+                    return { ...chat, unseenCount: 0 };
+                }
+                return chat; // Return other chats unchanged
+            });
+
+            console.log("return", updatedChats);
+            return updatedChats;
+        })
+
+    }, [messageProfileData])
 
     async function searchPhone(value: string) {
         let res = await fetch(import.meta.env.VITE_BASE_URL + "/searchuser?phone=" + value)

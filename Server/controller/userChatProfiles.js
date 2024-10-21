@@ -30,6 +30,7 @@ async function userChatProfiles(req, res) {
                     }
                 }
                 user.unseenCount = unseenCount
+                user.lastMsgTimestamp = chat.messages[chat.messages.length - 1].timestamp
             } else {
 
                 user.unseenCount = 0

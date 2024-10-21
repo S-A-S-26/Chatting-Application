@@ -50,10 +50,16 @@ export default function ProfileStrip({ val, onlineUsersList }: { val: TProfile, 
                 </div>
                 <div className='grid grid-rows-2 justify-start'>
                     <div className='tracking-tighter text-gray-500 text-sm'>
-                        05:11
-                        <span className='ml-2'>
-                            PM
-                        </span>
+                        {val.lastMsgTimestamp ?
+                            dayjs(val.lastMsgTimestamp).format('hh :  mm   A')
+                            :
+                            <>
+                                05 : 11
+                                < span className='ml-1'>
+                                    PM
+                                </span>
+                            </>
+                        }
                     </div>
                     <div className='flex justify-end'>
                         {val.unseenCount > 0 ?
