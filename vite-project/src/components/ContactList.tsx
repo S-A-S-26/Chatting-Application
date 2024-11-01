@@ -34,6 +34,23 @@ export default function ContactList({ showProfile, userData, socket, activeChatl
             console.log("user online status", val)
             setOnlineUsers(val)
         })
+        async function initOnlineStatus() {
+            console.log("initOnlineStatus")
+            let res = await fetch(import.meta.env.VITE_BASE_URL + '/getonlineusers')
+            let data = await res.json()
+            console.log("online data fetch", data)
+            setOnlineUsers(data.online)
+        }
+        initOnlineStatus()
+        return () => {
+            socket.off("user_online_status")
+            socket.off("addCountUnseen")
+        }
+    }, [socket])
+
+    useEffect(() => {
+        if (!socket) return
+        console.log("use effect add count unseen socket/messageprofildData")
         socket.on("addCountUnseen", (val: {}) => {
             console.log("add count to Unseen", val)
             setActiveChatls((prev: []) => {
@@ -50,19 +67,10 @@ export default function ContactList({ showProfile, userData, socket, activeChatl
                 return updatedChats;
             })
         })
-        async function initOnlineStatus() {
-            console.log("initOnlineStatus")
-            let res = await fetch(import.meta.env.VITE_BASE_URL + '/getonlineusers')
-            let data = await res.json()
-            console.log("online data fetch", data)
-            setOnlineUsers(data.online)
-        }
-        initOnlineStatus()
         return () => {
-            socket.off("user_online_status")
             socket.off("addCountUnseen")
         }
-    }, [socket])
+    }, [socket, messageProfileData])
 
     useEffect(() => {
         if (!messageProfileData) return

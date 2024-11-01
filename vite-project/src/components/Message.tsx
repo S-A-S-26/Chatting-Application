@@ -9,6 +9,7 @@ import ProfileSkeleton from './ProfileSkeleton'
 import Messages from './Messages'
 import { TChatData, TMessage, TProfile } from '../Interfaces/Interface'
 import { Socket } from 'socket.io-client'
+import Emojis from './Emojis'
 
 export default function Message({ setProfileStatus, showProfile, socket, activeChatls, setActiveChatls, onlineUsersList }: { showProfile: boolean, setProfileStatus: (value: boolean) => void, socket: Socket | undefined, activeChatls: TProfile, setActiveChatls: (value: []) => void, onlineUsersList: [] }) {
   const Navigate = useNavigate()
@@ -18,6 +19,7 @@ export default function Message({ setProfileStatus, showProfile, socket, activeC
   const [typedMessage, setTypedMessage] = useState<string>('')
   const [chats, setChats] = useState<TChatData>({ messages: [] })
   const msgContainer = useRef<HTMLDivElement | null>(null)
+  const showEmoji = useRef<HTMLDivElement | null>(null)
 
   function scrollMsgContainerbot() {
     console.log("scroll bot")
@@ -203,6 +205,21 @@ export default function Message({ setProfileStatus, showProfile, socket, activeC
     }
   }
 
+  function toggleEmojiWindow() {
+    console.log("showEmoji", showEmoji.current.style.bottom)
+    if (!showEmoji.current) return
+    if (showEmoji.current.style.bottom == '' || showEmoji.current.style.bottom == '-300px') {
+      showEmoji.current.style.bottom = '80px'
+    } else {
+      showEmoji.current.style.bottom = '-300px'
+    }
+  }
+
+  function addEmojitoMsg(val: string) {
+    console.log("addEmojitoMsg")
+    setTypedMessage((prev) => { return prev + " " + val })
+  }
+
   return (
     <>
       <div className='h-full flex flex-col'>
@@ -227,8 +244,8 @@ export default function Message({ setProfileStatus, showProfile, socket, activeC
             </div>
           </div>
         </div>
-        <div className='bg-mybackground grow flex flex-col'>
-          <div className='h-[calc(100vh-12rem)] overflow-x-auto' ref={msgContainer}>
+        <div className='bg-mybackground grow flex flex-col '>
+          <div className='h-[calc(100vh-12rem)] overflow-x-auto relative' ref={msgContainer}>
             {/* {chats && chats.messages.map((val: { content: string, sender: string }, idx: number) => { */}
             {/*   console.log("idx", idx) */}
             {/*   let content = val.content */}
@@ -239,19 +256,21 @@ export default function Message({ setProfileStatus, showProfile, socket, activeC
             {/* })} */}
             <Messages {...{ chats }} />
           </div >
-          <div className='h-20 flex items-center justify-center bg-white relative'>
-
-            <div className='flex grow gap-3 mx-4 px-8 h-12 items-center rounded-full bg-mybackground'>
-              <button className='bg-transparent p-0 border-none' onClick={logout}>
-                <Smile strokeWidth={1.25} size={22} className='text-gray-400 hover:text-gray-500' />
-              </button>
-              <input className='grow bg-mybackground outline-none text-gray-500 text-sm' placeholder='Type a message' onChange={(e) => setTypedMessage(e.target.value)} value={typedMessage} onKeyDown={(e) => sendMessageOnEnter(e)} />
-              <button className='bg-transparent p-0 border-none' onClick={logout}>
-                <Image strokeWidth={1.25} size={22} className='text-gray-400 hover:text-gray-500' />
-              </button>
-              <button className='bg-transparent p-0 border-none' onClick={sendMessagetoServer}>
-                <Send strokeWidth={1.25} size={22} className='text-gray-400 hover:text-gray-500' />
-              </button>
+          <div className='relative z-10'>
+            <div ref={showEmoji} className='m-2 z-1 absolute transition-all duration-500 bottom-[-300px] text-xl bg-white rounded-lg overflow-hidden'><Emojis {...{ addEmojitoMsg }} /></div>
+            <div className='h-20 flex items-center justify-center bg-white relative z-10'>
+              <div className='flex grow gap-3 mx-4 px-8 h-12 items-center rounded-full bg-mybackground relative'>
+                <button className='bg-transparent p-0 border-none' onClick={toggleEmojiWindow}>
+                  <Smile strokeWidth={1.25} size={22} className='text-gray-400 hover:text-gray-500' />
+                </button>
+                <input className='grow bg-mybackground outline-none text-gray-500 text-sm' placeholder='Type a message' onChange={(e) => setTypedMessage(e.target.value)} value={typedMessage} onKeyDown={(e) => sendMessageOnEnter(e)} />
+                <button className='bg-transparent p-0 border-none' onClick={logout}>
+                  <Image strokeWidth={1.25} size={22} className='text-gray-400 hover:text-gray-500' />
+                </button>
+                <button className='bg-transparent p-0 border-none' onClick={sendMessagetoServer}>
+                  <Send strokeWidth={1.25} size={22} className='text-gray-400 hover:text-gray-500' />
+                </button>
+              </div>
             </div>
           </div>
         </div>
