@@ -5,12 +5,12 @@ import { IRootState } from '../store'
 import { Skeleton } from "@/components/ui/skeleton"
 import { useSelector } from 'react-redux'
 
-export default function TopProfile() {
+export default function TopProfile({ toggleOtherProfile }: { toggleOtherProfile: () => void }) {
     const messageProfileData = useSelector((state: IRootState) => state.messageProfileData)
     return (
         <>
             <div className='flex py-2 items-center'>
-                <div className='bg-gray-50 w-[65px] h-[65px] rounded-full p-0 m-0 overflow-hidden'>
+                <div className='bg-gray-50 w-[65px] h-[65px] rounded-full p-0 m-0 overflow-hidden' onClick={toggleOtherProfile}>
                     {messageProfileData.profile ?
                         <img className='object-cover w-full h-full' src={import.meta.env.VITE_STATIC + messageProfileData.profile} />
                         :

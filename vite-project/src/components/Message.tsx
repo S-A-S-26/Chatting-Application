@@ -11,7 +11,7 @@ import { TChatData, TMessage, TProfile } from '../Interfaces/Interface'
 import { Socket } from 'socket.io-client'
 import Emojis from './Emojis'
 
-export default function Message({ setProfileStatus, showProfile, socket, activeChatls, setActiveChatls, onlineUsersList }: { showProfile: boolean, setProfileStatus: (value: boolean) => void, socket: Socket | undefined, activeChatls: TProfile, setActiveChatls: (value: []) => void, onlineUsersList: [] }) {
+export default function Message({ toggleOtherProfile, setProfileStatus, showProfile, socket, activeChatls, setActiveChatls, onlineUsersList }: { toggleOtherProfile: () => void, showProfile: boolean, setProfileStatus: (value: boolean) => void, socket: Socket | undefined, activeChatls: TProfile, setActiveChatls: (value: []) => void, onlineUsersList: [] }) {
   const Navigate = useNavigate()
 
   const loggedUser = useSelector((state: IRootState) => state.user)
@@ -227,7 +227,7 @@ export default function Message({ setProfileStatus, showProfile, socket, activeC
           {/* <h2 className='text-mysecondary text-3xl font-normal tracking-tighter'></h2> */}
           {/* <div>{messageProfileData}</div> */}
           {messageProfileData._id ?
-            <TopProfile />
+            <TopProfile {...{ toggleOtherProfile }} />
             :
             <ProfileSkeleton />
           }

@@ -23,13 +23,14 @@ const Messages = React.memo(function({ chats }: { chats: TChatData }) {
         let modDate = null
         let fmtDate;
         // Create a new Date object
-        const dateObject = new Date(timestamp);
-
+        const dateObject = new Date(new Date(timestamp).toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }))
+        console.log("dateObject", dateObject, dateObject.toISOString())
         // Extract date components (YYYY-MM-DD)
-        const dateobj = dateObject.toISOString().split('T')[0];
-        // if (!flag) {
-        //     console.log("currentdate/previous date", dateobj, prevDate.current)
-        // }
+        // const dateobj = dateObject.toISOString().split('T')[0];
+        const dateobj = dateObject.toLocaleDateString('en-CA')
+        if (!flag) {
+            console.log("currentdate/previous date", dateobj, prevDate.current)
+        }
         if ((prevDate.current != dateobj) || !prevDate.current) {
             modDate = dateobj
             fmtDate = date.format(dateObject, 'MMMM D,YYYY')
@@ -52,7 +53,7 @@ const Messages = React.memo(function({ chats }: { chats: TChatData }) {
         if (flag) {
             return time
         } else {
-            // console.log("modDate", modDate)
+            console.log("modDate", modDate)
             currentDate.current = fmtDate
             return modDate
         }
@@ -62,6 +63,7 @@ const Messages = React.memo(function({ chats }: { chats: TChatData }) {
         <>
             <div className='h-full py-8'>
                 {chats && chats.messages.map((val: { content: string, sender: string, timestamp: string }, idx: number) => {
+                    console.log("msg", val.content)
                     return (
                         <div key={idx}>
                             {getTime(val.timestamp, false) ? (

@@ -7,6 +7,11 @@ const messageSchema = new Schema({
     content: { type: String, required: true }, // Message content
     seen: { type: Boolean, default: false },
     timestamp: { type: Date, default: Date.now }, // Timestamp of when the message was sent
+    // timestamp: {
+    // type: Date, default: () => new Date(new Date().toLocaleString('en-US', {
+    //     timeZone: 'Asia/Kolkata'
+    // }))
+    // }, // Timestamp of when the message was sent
 });
 
 // Define chat schema
@@ -21,6 +26,7 @@ const chatSchema = new Schema({
 
 // Middleware to update `updatedAt` on message addition
 chatSchema.pre('save', function(next) {
+    console.log("Date.now b4 save chat", this, Date.now())
     this.updatedAt = Date.now();
     next();
 });
