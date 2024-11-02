@@ -1,16 +1,17 @@
 import { IRootState } from '@/store';
-import { Check, CircleUserRound, Info, MessageCircleMore, Phone, User } from 'lucide-react'
+import { Check, CircleUserRound, Info, MessageCircleMore, Phone, User, X } from 'lucide-react'
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-export default function OtherUserDetail() {
+export default function OtherUserDetail({ toggleOtherProfile }: { toggleOtherProfile: () => void }) {
     const messageProfileData = useSelector((state: IRootState) => state.messageProfileData)
     const [imageKey, setImageKey] = useState(Date.now());
 
     return (
         <>
             <div className='h-full flex flex-col bg-white'>
-                <div className='flex justify-between px-6 md:px-7 border-b-[1px] h-24 md:h-28 items-center'>
-                    <h2 className='text-gray-600 text-2xl p-4 font-normal tracking-tighter flex items-center'>
+                <div className='flex justify-start px-1 md:px-2 border-b-[1px] h-24 md:h-28 items-center'>
+                    <button className='bg-transparent border-none p-3 m-0' onClick={toggleOtherProfile}><X className='text-gray-400' /></button>
+                    <h2 className='text-mysecondary text-2xl p-2 font-normal tracking-tighter flex items-center'>
                         <span>User Info</span>
                     </h2>
                 </div>
@@ -26,7 +27,7 @@ export default function OtherUserDetail() {
                         </div>
                         <div className='m-1 bg-white rounded-xl p-4 px-12 w-full'>
                             <div className='flex items-center gap-3'>
-                                <Phone strokeWidth={1.5} size={30} className='text-gray-400' />
+                                <Phone strokeWidth={1.5} size={30} className='text-mysecondary' />
                                 <div className='w-full'>
                                     <h2 className='text-md tracking-tight text-gray-700'>Contact</h2>
 
@@ -38,7 +39,7 @@ export default function OtherUserDetail() {
                         </div>
                         <div className='m-1 bg-white rounded-xl p-4 px-12 w-full'>
                             <div className='flex items-center gap-3'>
-                                <User strokeWidth={1.5} size={30} className='text-gray-400' />
+                                <User strokeWidth={1.5} size={30} className='text-mysecondary' />
                                 <div className='w-full'>
                                     <h2 className='text-md tracking-tight text-gray-700'>Username</h2>
 
@@ -50,7 +51,7 @@ export default function OtherUserDetail() {
                         </div>
                         <div className='m-1 bg-white rounded-xl p-4 px-12  w-full'>
                             <div className='flex items-center gap-3'>
-                                <Info strokeWidth={1.5} size={30} className='text-gray-400' />
+                                <Info strokeWidth={1.5} size={30} className='text-mysecondary' />
                                 <div className='w-full'>
                                     <h2 className='text-md tracking-tight text-gray-700'>Status</h2>
 

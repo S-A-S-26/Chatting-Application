@@ -89,7 +89,7 @@ export default function ProfileEdit({ userData }: { userData: TProfile }) {
         <>
             <div className='h-full flex flex-col'>
                 <div className='flex justify-between px-4 md:px-7 border h-24 md:h-28 border-r-0 items-center'>
-                    <h2 className='text-gray-700 text-3xl font-normal tracking-tighter flex items-center'>
+                    <h2 className='text-mysecondary text-3xl font-normal tracking-tighter flex items-center'>
                         <span>Profile</span>
                     </h2>
                 </div>
@@ -107,7 +107,7 @@ export default function ProfileEdit({ userData }: { userData: TProfile }) {
                         </label>
                         <div className='m-1 bg-white rounded-xl p-4 px-12 w-full'>
                             <div className='flex items-center gap-3'>
-                                <Phone strokeWidth={1.5} size={30} className='text-gray-400' />
+                                <Phone strokeWidth={1.5} size={30} className='text-mysecondary' />
                                 <div className='w-full'>
                                     <h2 className='text-md tracking-tight text-gray-700'>Contact</h2>
 
@@ -119,7 +119,7 @@ export default function ProfileEdit({ userData }: { userData: TProfile }) {
                         </div>
                         <div className='m-1 bg-white rounded-xl p-4 px-12 w-full'>
                             <div className='flex items-center gap-3'>
-                                <User strokeWidth={1.5} size={30} className='text-gray-400' />
+                                <User strokeWidth={1.5} size={30} className='text-mysecondary' />
                                 <div className='w-full'>
                                     <h2 className='text-md tracking-tight text-gray-700'>Username</h2>
 
@@ -134,7 +134,7 @@ export default function ProfileEdit({ userData }: { userData: TProfile }) {
                         </div>
                         <div className='m-1 bg-white rounded-xl p-4 px-12  w-full'>
                             <div className='flex items-center gap-3'>
-                                <Info strokeWidth={1.5} size={30} className='text-gray-400' />
+                                <Info strokeWidth={1.5} size={30} className='text-mysecondary' />
                                 <div className='w-full'>
                                     <h2 className='text-md tracking-tight text-gray-700'>Status</h2>
 

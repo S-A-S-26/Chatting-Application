@@ -120,7 +120,7 @@ export default function Home() {
         <div className="md:hidden bottom-0 left-0 right-0 h-20 fixed border-secondary border-t-2">
           <MobileFooter />
         </div>
-        <div ref={otherProfile} className="z-50 absolute w-full md:w-6/12 xl:w-4/12 2xl-3/12 h-full border-l-[1px] transition-all duration-500 right-[-800px]"><OtherUserDetail /></div>
+        <div ref={otherProfile} className="z-50 absolute w-full md:w-5/12 xl:w-3/12 2xl-3/12 h-full border-l-[1px] transition-all duration-500 right-[-800px]"><OtherUserDetail {...{ toggleOtherProfile }} /></div>
       </div>
     </>
   );
