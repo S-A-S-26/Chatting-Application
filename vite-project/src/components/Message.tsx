@@ -10,6 +10,7 @@ import Messages from './Messages'
 import { TChatData, TMessage, TProfile } from '../Interfaces/Interface'
 import { Socket } from 'socket.io-client'
 import Emojis from './Emojis'
+import bgSvg from '../assets/NoMsg.svg'
 
 export default function Message({ toggleOtherProfile, setProfileStatus, showProfile, socket, activeChatls, setActiveChatls, onlineUsersList }: { toggleOtherProfile: () => void, showProfile: boolean, setProfileStatus: (value: boolean) => void, socket: Socket | undefined, activeChatls: TProfile, setActiveChatls: (value: []) => void, onlineUsersList: [] }) {
   const Navigate = useNavigate()
@@ -217,64 +218,69 @@ export default function Message({ toggleOtherProfile, setProfileStatus, showProf
 
   function addEmojitoMsg(val: string) {
     console.log("addEmojitoMsg")
-    setTypedMessage((prev) => { return prev + " " + val })
+    setTypedMessage((prev) => {
+      return prev + " " + val
+    })
   }
 
   return (
     <>
-      <div className='h-full flex flex-col'>
-        <div className='flex justify-between px-7 border h-28 border-l-0 items-center'>
-          {/* <h2 className='text-mysecondary text-3xl font-normal tracking-tighter'></h2> */}
-          {/* <div>{messageProfileData}</div> */}
-          {messageProfileData._id ?
-            <TopProfile {...{ toggleOtherProfile }} />
-            :
-            <ProfileSkeleton />
-          }
-          < div className='flex gap-2'>
-            <div className=' flex p-2 rounded-full transition-all duration-500 group hover:bg-gray-100'>
-              <button className='bg-transparent p-0 border-none outline-none hover:border-none' onClick={logout}>
-                <LogOut strokeWidth={1.3} size={22} className='text-gray-400 transition-all duration-500 group-hover:text-gray-600' />
-              </button>
-            </div>
-            <div className=' flex p-2 rounded-full transition-all duration-500 group hover:bg-gray-100'>
-              <button className='bg-transparent p-0 border-none outline-none hover:border-none' onClick={() => setProfileStatus(!showProfile)}>
-                <Settings strokeWidth={1.3} size={22} className='text-gray-400 transition-all duration-500 group-hover:text-gray-600' />
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className='bg-mybackground grow flex flex-col '>
-          <div className='h-[calc(100vh-12rem)] overflow-x-auto relative' ref={msgContainer}>
-            {/* {chats && chats.messages.map((val: { content: string, sender: string }, idx: number) => { */}
-            {/*   console.log("idx", idx) */}
-            {/*   let content = val.content */}
-            {/*   return <div key={idx}> */}
-            {/*     {val.content} */}
-            {/*   </div> */}
+      {messageProfileData._id ?
 
-            {/* })} */}
-            <Messages {...{ chats }} />
-          </div >
-          <div className='relative z-10'>
-            <div ref={showEmoji} className='m-2 z-1 absolute transition-all duration-500 bottom-[-300px] text-xl bg-white rounded-lg overflow-hidden'><Emojis {...{ addEmojitoMsg }} /></div>
-            <div className='h-20 flex items-center justify-center bg-white relative z-10'>
-              <div className='flex grow gap-3 mx-4 px-8 h-12 items-center rounded-full bg-mybackground relative'>
-                <button className='bg-transparent p-0 border-none' onClick={toggleEmojiWindow}>
-                  <Smile strokeWidth={1.25} size={22} className='text-gray-400 hover:text-gray-500' />
+        <div className='h-full flex flex-col'>
+          <div className='flex justify-between px-7 border h-28 border-l-0 items-center'>
+            {/* <h2 className='text-mysecondary text-3xl font-normal tracking-tighter'></h2> */}
+            {/* <div>{messageProfileData}</div> */}
+            {messageProfileData._id ?
+              <TopProfile {...{ toggleOtherProfile }} />
+              :
+              <ProfileSkeleton />
+            }
+            < div className='flex gap-2'>
+              <div className=' flex p-2 rounded-full transition-all duration-500 group hover:bg-gray-100'>
+                <button className='bg-transparent p-0 border-none outline-none hover:border-none' onClick={logout}>
+                  <LogOut strokeWidth={1.3} size={22} className='text-gray-400 transition-all duration-500 group-hover:text-gray-600' />
                 </button>
-                <input className='grow bg-mybackground outline-none text-gray-500 text-sm' placeholder='Type a message' onChange={(e) => setTypedMessage(e.target.value)} value={typedMessage} onKeyDown={(e) => sendMessageOnEnter(e)} />
-                <button className='bg-transparent p-0 border-none' onClick={logout}>
-                  <Image strokeWidth={1.25} size={22} className='text-gray-400 hover:text-gray-500' />
-                </button>
-                <button className='bg-transparent p-0 border-none' onClick={sendMessagetoServer}>
-                  <Send strokeWidth={1.25} size={22} className='text-gray-400 hover:text-gray-500' />
+              </div>
+              <div className=' flex p-2 rounded-full transition-all duration-500 group hover:bg-gray-100'>
+                <button className='bg-transparent p-0 border-none outline-none hover:border-none' onClick={() => setProfileStatus(!showProfile)}>
+                  <Settings strokeWidth={1.3} size={22} className='text-gray-400 transition-all duration-500 group-hover:text-gray-600' />
                 </button>
               </div>
             </div>
           </div>
-        </div>
-      </div >
+          <div className='bg-mybackground grow flex flex-col '>
+            <div className='h-[calc(100vh-12rem)] overflow-x-auto relative' ref={msgContainer}>
+              {/* {chats && chats.messages.map((val: { content: string, sender: string }, idx: number) => { */}
+              {/*   console.log("idx", idx) */}
+              {/*   let content = val.content */}
+              {/*   return <div key={idx}> */}
+              {/*     {val.content} */}
+              {/*   </div> */}
+
+              {/* })} */}
+              <Messages {...{ chats }} />
+            </div >
+            <div className='relative z-10'>
+              <div ref={showEmoji} className='m-2 z-1 absolute transition-all duration-500 bottom-[-300px] text-xl bg-white rounded-lg overflow-hidden'><Emojis {...{ addEmojitoMsg }} /></div>
+              <div className='h-20 flex items-center justify-center bg-white relative z-10'>
+                <div className='flex grow gap-3 mx-4 px-8 h-12 items-center rounded-full bg-mybackground relative'>
+                  <button className='bg-transparent p-0 border-none' onClick={toggleEmojiWindow}>
+                    <Smile strokeWidth={1.25} size={22} className='text-gray-400 hover:text-gray-500' />
+                  </button>
+                  <input className='grow bg-mybackground outline-none text-gray-500 text-sm' placeholder='Type a message' onChange={(e) => setTypedMessage(e.target.value)} value={typedMessage} onKeyDown={(e) => sendMessageOnEnter(e)} />
+                  <button className='bg-transparent p-0 border-none' onClick={logout}>
+                    <Image strokeWidth={1.25} size={22} className='text-gray-400 hover:text-gray-500' />
+                  </button>
+                  <button className='bg-transparent p-0 border-none' onClick={sendMessagetoServer}>
+                    <Send strokeWidth={1.25} size={22} className='text-gray-400 hover:text-gray-500' />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div >
+        : <div className='h-full'><img className='object-cover h-full w-full' src={bgSvg} /></div >}
     </>
   )
 }
