@@ -19,7 +19,7 @@ const corsOptions = {
     origin: ['https://your-netlify-app-url.netlify.app', 'http://localhost:5173', '*'], // Replace with actual Netlify URL
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
+    // credentials: true
 };
 
 app.use(cors(corsOptions))
