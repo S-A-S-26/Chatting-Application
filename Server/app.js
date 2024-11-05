@@ -15,8 +15,14 @@ const path = require('path');
 const { initiateSocket } = require('./socket/socket')
 console.log('path join', path.join(__dirname, 'uploads'))
 
+const corsOptions = {
+    origin: ['https://your-netlify-app-url.netlify.app', 'http://localhost:5173', '*'], // Replace with actual Netlify URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+};
 
-app.use(cors())
+app.use(cors(corsOptions))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use('/api', router)
