@@ -19,6 +19,8 @@ export default function ContactList({ showProfile, userData, socket, activeChatl
 
     const sliceData = useSelector((state: IRootState) => state.user)
 
+    useEffect(() => { console.log("setActiveChatls use eff", activeChatls) }, [activeChatls])
+
     useEffect(() => {
         console.log("useEffect from Contactlist fetching profiles")
         if (sliceData._id == "") return

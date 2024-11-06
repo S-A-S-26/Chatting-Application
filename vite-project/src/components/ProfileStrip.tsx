@@ -10,6 +10,7 @@ export default function ProfileStrip({ val, onlineUsersList }: { val: TProfile, 
     const dispatch = useDispatch()
 
     async function setMessageProfile(userInfo: TProfile) {
+        console.log("setMessageProfile", userInfo)
         dispatch(setMessageUser(
             //{
             //    _id: data.user._id,

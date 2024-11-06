@@ -8,6 +8,7 @@ export const messageProfile = createSlice({
     phone: '',
     status: '',
     profile: '',
+    group: false,
   },
   reducers: {
     setMessageUser: (state, action) => {
@@ -17,6 +18,7 @@ export const messageProfile = createSlice({
       state.phone = action.payload.phone;
       state.status = action.payload.status;
       state.profile = action.payload.profile;
+      state.group = action.payload.group;
     },
 
   },

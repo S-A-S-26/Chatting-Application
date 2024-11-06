@@ -1,4 +1,5 @@
 const Chat = require('../model/chat')
+const User = require('../model/user')
 const { io } = require('../app')
 const { getInstanceIo, online } = require('../socket/socket')
 
@@ -14,7 +15,15 @@ async function createGroup(req, res) {
                 // console.log("req.body.messages", req.body.message)
                 chat.messages.push(req.body.message)
                 newMessageId = chat.messages[chat.messages.length - 1]._id;
+                sendDataToReceipient(req.body.sentBy, req.body.groupName, req.body.message, newMessageId)
             } else {
+
+                const user = await new User({
+                    "username": req.body.groupName,
+                    "phone": req.body.groupName,
+                    "group": true,
+                })
+                await user.save()
                 chat = new Chat({
                     "participants": req.body.participants,
                     "isGroup": true,
@@ -24,7 +33,6 @@ async function createGroup(req, res) {
             }
             // console.log('chat', chat)
             await chat.save()
-            sendDataToReceipient(req.body.sentBy, req.body.groupName, req.body.message, newMessageId)
             res.status(200).json({ msg: "message sent successfully" })
         } else {
             res.status(500).json({

@@ -17,7 +17,7 @@ export default function Message({ toggleOtherProfile, setProfileStatus, showProf
 
     const loggedUser = useSelector((state: IRootState) => state.user)
     const messageProfileData = useSelector((state: IRootState) => state.messageProfileData)
-    const [typedMessage, setTypedMessage] = useState<string>('')
+    const [typedMessage, setTypedMessage] = useState<string>('group')
     const [chats, setChats] = useState<TChatData>({ messages: [] })
     const msgContainer = useRef<HTMLDivElement | null>(null)
     const showEmoji = useRef<HTMLDivElement | null>(null)

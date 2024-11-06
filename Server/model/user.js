@@ -11,12 +11,17 @@ const jwt = require('jsonwebtoken')
 const userSchema = new Schema({
     username: { type: String, required: true },
     phone: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    group: { type: Boolean, default: false }, // New field to indicate a group account
+    phone: {
+        type: String,
+        unique: true,
+        required: function() { return !this.group; } // Required if not a group
+    },
     profile: { type: String },
     status: { type: String, default: "Hey There" },
     pinned: { type: [String] },
     unseenCount: { type: Number, default: 0 },
-    lastMsgTimestamp: { type: Date, required: true, default: null },
+    lastMsgTimestamp: { type: Date, default: null },
     lastSeen: { type: Date, required: true, default: Date.now() },
     createdAt: { type: Date, required: true, default: Date.now() },
 }, { timestamps: true })
