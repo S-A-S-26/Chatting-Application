@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { MapPin, MessageCircleMore, MessageSquareText, Pin, Search } from 'lucide-react'
+import { EllipsisVertical, MapPin, MessageCircleMore, MessageSquareText, Pin, Search, Users } from 'lucide-react'
 import ProfileStrip from './ProfileStrip'
 import ProfileEdit from './ProfileEdit'
 import { TProfile } from '../Interfaces/Interface'
@@ -116,7 +116,10 @@ export default function ContactList({ showProfile, userData, socket, activeChatl
                         <h2 className='text-mysecondary text-3xl font-normal tracking-tighter flex items-center'>
                             <MessageCircleMore strokeWidth={2} size={30} /><span></span>Messages
                         </h2>
-                        <ExpandableSearch {...{ searchPhone, setShowSearch, setContactList }} />
+                        <div className='flex gap-2'>
+                            <ExpandableSearch {...{ searchPhone, setShowSearch, setContactList }} />
+                            <button className='bg-gray-50 flex p-2 rounded-full transition-all duration-500 group hover:bg-gray-100 hover:border-none border-none' ><Users strokeWidth={1.3} className='text-gray-400 hover:text-gray-500' /></button>
+                        </div>
                     </div>
                     {
                         showSearch ? <SearchResults {...{ contactList, onlineUsersList }} /> :
@@ -147,7 +150,7 @@ export default function ContactList({ showProfile, userData, socket, activeChatl
                                 </div>
                             </>
                     }
-                </div>}
+                </div >}
         </>
     )
 }

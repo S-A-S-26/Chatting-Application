@@ -19,6 +19,9 @@ const chatSchema = new Schema({
     participants: [
         { type: Schema.Types.ObjectId, ref: 'User', required: true }, // Array to hold sender and recipient
     ],
+    isGroup: { type: Boolean, default: false },
+    groupName: { type: String, unique: true },
+    creator: { type: Schema.Types.ObjectId, ref: 'User', required: false },
     messages: [messageSchema], // Array of messages
     createdAt: { type: Date, default: Date.now }, // When the chat started
     updatedAt: { type: Date, default: Date.now }, // Last updated time

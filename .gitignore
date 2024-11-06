@@ -1,5 +1,5 @@
 Server/.env
 vite-project/.env
-# **/.env
+**/.env
 nodemodules
 Server/uploads
