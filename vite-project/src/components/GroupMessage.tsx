@@ -64,22 +64,22 @@ export default function Message({ toggleOtherProfile, setProfileStatus, showProf
 
     async function fetchUserChat(disable = false) {
         if (!messageProfileData._id) return
-        let res = await fetch(import.meta.env.VITE_BASE_URL + "/fetchchats", {
+        let res = await fetch(import.meta.env.VITE_BASE_URL + "/fetchgroupchats", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                participants: [loggedUser._id, messageProfileData._id],
+                groupName: messageProfileData.username,
             }),
         });
         let chatData = await res.json()
         console.log("chatData from useEffect fetch in messages", chatData)
         if (chatData) {
             setChats(chatData)
-            if (!disable) {
-                setMessageReadBy(chatData.messages, chatData._id)
-            }
+            // if (!disable) {
+            //     setMessageReadBy(chatData.messages, chatData._id)
+            // }
         } else {
             setChats({ messages: [] })
         }

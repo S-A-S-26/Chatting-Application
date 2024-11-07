@@ -17,6 +17,7 @@ const userSchema = new Schema({
         unique: true,
         required: function() { return !this.group; } // Required if not a group
     },
+    password: { type: String, required: true },
     profile: { type: String },
     status: { type: String, default: "Hey There" },
     pinned: { type: [String] },

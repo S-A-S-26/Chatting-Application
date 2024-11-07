@@ -17,6 +17,7 @@ const { online } = require('../socket/socket')
 const fetchChat = require('../controller/fetchChat')
 const addSeenStatusOffline = require('../controller/addSeenStatusOffline')
 const createGroup = require('../controller/createGroup')
+const fetchGroupChat = require('../controller/fetchGroupChat')
 
 
 router.post('/register', validate(regVal), register)
@@ -32,5 +33,6 @@ router.get('/getonlineusers', (req, res) => res.status(200).json({ online }))
 router.post('/fetchchats', fetchChat)
 router.post('/markseen', addSeenStatusOffline)
 router.post('/createGroup', createGroup)
+router.post('/fetchgroupchats', fetchGroupChat)
 
 module.exports = router;
