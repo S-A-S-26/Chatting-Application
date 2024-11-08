@@ -17,7 +17,7 @@ export default function Message({ toggleOtherProfile, setProfileStatus, showProf
 
     const loggedUser = useSelector((state: IRootState) => state.user)
     const messageProfileData = useSelector((state: IRootState) => state.messageProfileData)
-    const [typedMessage, setTypedMessage] = useState<string>('group')
+    const [typedMessage, setTypedMessage] = useState<string>('')
     const [chats, setChats] = useState<TChatData>({ messages: [] })
     const msgContainer = useRef<HTMLDivElement | null>(null)
     const showEmoji = useRef<HTMLDivElement | null>(null)
@@ -28,39 +28,40 @@ export default function Message({ toggleOtherProfile, setProfileStatus, showProf
         msgContainer.current.scrollTop = msgContainer.current?.scrollHeight
     }
 
-    async function setMessageReadBy(message: TMessage | TMessage[], customChatId = undefined) {
-        console.log("set message readby", message)
-        if (!socket) return
-        if (message) {
-            if (!customChatId) {
-                socket.emit("seenstatus", { chat_id: chats._id, message_id: message._id, receiver_id: messageProfileData._id })
-            } else {
-                const msgIdList = (message as TMessage[])
-                    .filter((val: TMessage) => !val.seen && val.sender == messageProfileData._id) // Filter messages that haven't been seen
-                    .map((val: TMessage) => {
-                        console.log(val.content)
-                        return val._id
-                    });
-                if (msgIdList.length > 0) {
-                    const postData = {
-                        chatId: customChatId,
-                        messageIds: msgIdList
-                    }
-                    console.log("postData", postData)
-                    const res = await fetch(import.meta.env.VITE_BASE_URL + "/markseen", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(postData)
-                    })
-                    const data = await res.json()
-                    console.log("res.data for seen messages multiple", data)
-                }
-            }
-        }
+    //not required for now
+    // async function setMessageReadBy(message: TMessage | TMessage[], customChatId = undefined) {
+    //     console.log("set message readby", message)
+    //     if (!socket) return
+    //     if (message) {
+    //         if (!customChatId) {
+    //             socket.emit("seenstatus", { chat_id: chats._id, message_id: message._id, receiver_id: messageProfileData._id })
+    //         } else {
+    //             const msgIdList = (message as TMessage[])
+    //                 .filter((val: TMessage) => !val.seen && val.sender == messageProfileData._id) // Filter messages that haven't been seen
+    //                 .map((val: TMessage) => {
+    //                     console.log(val.content)
+    //                     return val._id
+    //                 });
+    //             if (msgIdList.length > 0) {
+    //                 const postData = {
+    //                     chatId: customChatId,
+    //                     messageIds: msgIdList
+    //                 }
+    //                 console.log("postData", postData)
+    //                 const res = await fetch(import.meta.env.VITE_BASE_URL + "/markseen", {
+    //                     method: "POST",
+    //                     headers: {
+    //                         "Content-Type": "application/json",
+    //                     },
+    //                     body: JSON.stringify(postData)
+    //                 })
+    //                 const data = await res.json()
+    //                 console.log("res.data for seen messages multiple", data)
+    //             }
+    //         }
+    //     }
 
-    }
+    // }
 
     async function fetchUserChat(disable = false) {
         if (!messageProfileData._id) return
@@ -84,35 +85,35 @@ export default function Message({ toggleOtherProfile, setProfileStatus, showProf
             setChats({ messages: [] })
         }
     }
-    //this is just for dev purpose to check what value i get
+    //main effect required to load chat 
     useEffect(() => {
         console.log('messageProfileData', messageProfileData)
         fetchUserChat()
         if (!socket) return
         console.log("init live Update Seen ")
-        socket.on("liveUpdateSeen", (val) => {
-            console.log("live update Seen")
-            fetchUserChat(true)
-        })
+        socket.emit("joinRoom", messageProfileData.username)
+        // socket.on("liveUpdateSeen", (val) => {
+        //     console.log("live update Seen")
+        //     fetchUserChat(true)
+        // })
         return () => {
-            socket.off("liveUpdateSeen")
+            // socket.off("liveUpdateSeen")
         }
     }, [messageProfileData])
 
     useEffect(() => {
         console.log("use effect for socket incoming init ", socket, messageProfileData)
         if (socket) {
-            socket.on('incomingMsg', (val) => {
-                console.log("incoming Msg", chats, val)
-                console.log("previous msg in chat", chats)
+            socket.on('roomMessage', (val) => {
+                console.log("room message", chats, val)
                 if (!chats) return
-                console.log("ids", val.sender, messageProfileData)
-                if (val.sender == messageProfileData._id) {
+                console.log("ids", val.room, messageProfileData.username)
+                if (val.room == messageProfileData.username) { //** need to add sender/room from backend remaining
                     console.log("chat updated via incomingMsg")
                     setChats({
                         ...chats, messages: [...chats.messages, val.message]
                     })
-                    setMessageReadBy(val.message)
+                    // setMessageReadBy(val.message)
                 }
             })
         }
@@ -120,31 +121,32 @@ export default function Message({ toggleOtherProfile, setProfileStatus, showProf
         return () => {
             console.log("incoming socket cleanup")
             if (socket) {
-                socket.off('incomingMsg')
+                socket.off('roomMessage')
             }
         }
     }, [socket, messageProfileData, chats])
 
-    useEffect(() => {
-        if (!socket) return
-        socket.on("seenstatusset", (val) => {
-            console.log("seen status set", val)
-            setChats((prevChats) => {
-                const updatedChat = { ...prevChats };
-                const len = updatedChat.messages.length - 1;
+    //this is not needed 
+    // useEffect(() => {
+    //     if (!socket) return
+    //     socket.on("seenstatusset", (val) => {
+    //         console.log("seen status set", val)
+    //         setChats((prevChats) => {
+    //             const updatedChat = { ...prevChats };
+    //             const len = updatedChat.messages.length - 1;
 
-                if (len >= 0) {
-                    updatedChat.messages[len].seen = true;
-                }
+    //             if (len >= 0) {
+    //                 updatedChat.messages[len].seen = true;
+    //             }
 
-                console.log("chat updated in seen statusset");
-                return updatedChat; // Return the updated state
-            });
-        })
-        return () => {
-            socket.off("seenstatusset")
-        }
-    }, [socket])
+    //             console.log("chat updated in seen statusset");
+    //             return updatedChat; // Return the updated state
+    //         });
+    //     })
+    //     return () => {
+    //         socket.off("seenstatusset")
+    //     }
+    // }, [socket])
 
 
     function logout() {
@@ -152,10 +154,11 @@ export default function Message({ toggleOtherProfile, setProfileStatus, showProf
         Navigate('/register')
     }
 
-    async function setUnseenCount(to) {
-        console.log("to", to)
-        socket.emit("unseenCount", { id: to, sender: loggedUser._id })
-    }
+    //not required
+    // async function setUnseenCount(to) {
+    //     console.log("to", to)
+    //     socket.emit("unseenCount", { id: to, sender: loggedUser._id })
+    // }
 
     async function sendMessagetoServer() {
         console.log("typed message", typedMessage)
@@ -163,6 +166,8 @@ export default function Message({ toggleOtherProfile, setProfileStatus, showProf
         let payload = {
             "sentBy": loggedUser._id,
             "receiver": messageProfileData._id,
+            "room": messageProfileData.username,
+            "new": false,
             "participants": [
                 loggedUser._id, messageProfileData._id
             ],
@@ -172,7 +177,7 @@ export default function Message({ toggleOtherProfile, setProfileStatus, showProf
             }
         }
         console.log("payload", payload)
-        let res = await fetch(import.meta.env.VITE_BASE_URL + '/sendmessage', {
+        let res = await fetch(import.meta.env.VITE_BASE_URL + '/createGroup', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -190,7 +195,7 @@ export default function Message({ toggleOtherProfile, setProfileStatus, showProf
                 })
             }
             setTypedMessage('')
-            setUnseenCount(messageProfileData._id)
+            // setUnseenCount(messageProfileData._id)
         }
         console.log("chat", chats)
     }

@@ -52,6 +52,11 @@ function initiateSocket(io) {
             socket.to(online[val.id]).emit("addCountUnseen", val.sender)
         })
 
+        socket.on('joinRoom', (val) => {
+            console.log("join room", val)
+            socket.join(val)
+        })
+
         socket.on('disconnect', () => {
             console.log("Socket Disconnected", socket.id)
             deleteKeysByValue(online, socket.id)
@@ -59,6 +64,7 @@ function initiateSocket(io) {
             socket.broadcast.emit("welcome", `Socket has left : ${socket.id}`)
             socket.removeAllListeners();
         })
+
     })
 
 }

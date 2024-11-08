@@ -10,7 +10,6 @@ async function fetchGroupChat(req, res) {
             groupName: groupName
 
         });
-        console.log("paricipants params", participants)
         console.log("chats group chat", chats)
         res.status(200).json(chats)
     } catch (error) {
