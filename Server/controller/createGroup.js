@@ -33,7 +33,7 @@ async function createGroup(req, res) {
                 })
             }
             // console.log('chat', chat)
-            // await chat.save()
+            await chat.save()
             res.status(200).json({ msg: "message sent successfully" })
         } else {
             res.status(500).json({
@@ -55,6 +55,6 @@ async function sendDataToReceipient(sender, room, message, mid) {
     message._id = mid
     // console.log("sendDataToReceipient", socketio)
     // socketio.emit("welcome", "Socket from chat responding")
-    socketio.to(room).emit('roomMessage', { message, room })
+    socketio.to(room).emit('roomMessage', { message, room, profile })
 }
 module.exports = createGroup

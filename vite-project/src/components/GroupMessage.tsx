@@ -11,6 +11,7 @@ import { TChatData, TMessage, TProfile } from '../Interfaces/Interface'
 import { Socket } from 'socket.io-client'
 import Emojis from './Emojis'
 import bgSvg from '../assets/NoMsg.svg'
+import GroupMessages from './GroupMessages'
 
 export default function Message({ toggleOtherProfile, setProfileStatus, showProfile, socket, activeChatls, setActiveChatls, onlineUsersList }: { toggleOtherProfile: () => void, showProfile: boolean, setProfileStatus: (value: boolean) => void, socket: Socket | undefined, activeChatls: TProfile, setActiveChatls: (value: []) => void, onlineUsersList: [] }) {
     const Navigate = useNavigate()
@@ -264,7 +265,7 @@ export default function Message({ toggleOtherProfile, setProfileStatus, showProf
                             {/*   </div> */}
 
                             {/* })} */}
-                            <Messages {...{ chats }} />
+                            <GroupMessages {...{ chats }} />
                         </div >
                         <div className='relative z-10'>
                             <div ref={showEmoji} className='m-2 z-1 absolute transition-all duration-500 bottom-[-300px] text-xl bg-white rounded-lg overflow-hidden'><Emojis {...{ addEmojitoMsg }} /></div>

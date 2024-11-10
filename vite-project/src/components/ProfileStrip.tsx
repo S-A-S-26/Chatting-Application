@@ -62,6 +62,7 @@ export default function ProfileStrip({ val, onlineUsersList }: { val: TProfile, 
                             </>
                         }
                     </div>
+
                     <div className='flex justify-end'>
                         {val.unseenCount > 0 ?
                             <div className='text-white bg-red-500 rounded-full w-4 h-4 text-xs'>
