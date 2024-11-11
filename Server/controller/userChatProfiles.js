@@ -12,8 +12,9 @@ async function userChatProfiles(req, res) {
             let unseenCount = 0;
             const chat = await Chat.findOne({
                 participants: {
-                    $all: [user._id, user_id]
-                }
+                    $all: [user._id, user_id],
+                },
+                isGroup: false
             })
                 .select({ messages: 1 })
             // console.log("message in user chat profile", chat)

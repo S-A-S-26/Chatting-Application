@@ -49,10 +49,13 @@ async function createGroup(req, res) {
 }
 
 async function sendDataToReceipient(sender, room, message, mid) {
-    console.log("paritcipants send d to rec", room)
+    console.log("paritcipants send d to rec", room, sender)
     const socketio = getInstanceIo()
     message.timestamp = new Date()
     message._id = mid
+    let profile = await User.findOne({ "_id": sender }).select({ "profile": 1 })
+    console.log("profile", profile)
+    message.profile = profile.profile
     // console.log("sendDataToReceipient", socketio)
     // socketio.emit("welcome", "Socket from chat responding")
     socketio.to(room).emit('roomMessage', { message, room, profile })

@@ -5,7 +5,8 @@ async function fetchChat(req, res) {
     try {
         let participants = req.body.participants
         const chats = await Chat.findOne({
-            participants: { $all: participants }
+            participants: { $all: participants },
+            isGroup: false
 
         });
         console.log("paricipants params", participants)
