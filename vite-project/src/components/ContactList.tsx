@@ -145,7 +145,10 @@ export default function ContactList({ showProfile, userData, socket, activeChatl
                                         </p>
                                         {activeChatls.map((val, idx) => {
                                             if (sliceData._id != val._id) {
-                                                return < ProfileStrip key={idx} {...{ val, onlineUsersList }} />
+                                                if (val.group && !val.participants.includes(sliceData._id)) {
+                                                } else {
+                                                    return < ProfileStrip key={idx} {...{ val, onlineUsersList }} />
+                                                }
                                             }
                                         })}
                                     </div>

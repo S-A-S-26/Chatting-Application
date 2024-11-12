@@ -29,7 +29,6 @@ export default function Login({ setRegView }: { setRegView: (value: boolean) => 
             localStorage.setItem('token', data.token)
             Navigate('/')
         } else {
-            alert(`error ${data.msg}`)
             toast.error(data.msg)
         }
     }

@@ -23,6 +23,7 @@ async function createGroup(req, res) {
                     "username": req.body.groupName,
                     "phone": req.body.groupName,
                     "group": true,
+                    "participants": req.body.paricipants,
                 })
                 await user.save()
                 chat = new Chat({
