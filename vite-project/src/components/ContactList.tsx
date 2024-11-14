@@ -5,18 +5,18 @@ import ProfileEdit from './ProfileEdit'
 import { TProfile } from '../Interfaces/Interface'
 import ExpandableSearch from './ExpandableSearch'
 import SearchResults from './SearchResults'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { IRootState } from '@/store'
 import { Socket } from 'socket.io-client'
+import { toggleCreateGroup } from "../store/utils/groupModal";
 
 export default function ContactList({ showProfile, userData, socket, activeChatls, setActiveChatls, onlineUsersList, setOnlineUsers }: { showProfile: boolean, userData: TProfile, socket: Socket | undefined, activeChatls: TProfile, setActiveChatls: (value: []) => void, onlineUsersList: {}, setOnlineUsers: (value: {}) => void }) {
-    const det = ["Sujit Sutar", "Sagar Rite", "Shyam Sutar", "Geeta Sutar", "John Doe", "George Bush", "Putin"]
     // const [activeChatls, setActiveChatls] = useState<TProfile[]>([])
     const [contactList, setContactList] = useState<[]>([])
     const [showSearch, setShowSearch] = useState<boolean>(false)
     // const [onlineUsersList, setOnlineUsers] = useState<object>([])
     const messageProfileData = useSelector((state: IRootState) => state.messageProfileData)
-
+    const dispatch = useDispatch()
     const sliceData = useSelector((state: IRootState) => state.user)
 
     useEffect(() => { console.log("setActiveChatls use eff", activeChatls) }, [activeChatls])
@@ -120,7 +120,7 @@ export default function ContactList({ showProfile, userData, socket, activeChatl
                         </h2>
                         <div className='flex gap-2'>
                             <ExpandableSearch {...{ searchPhone, setShowSearch, setContactList }} />
-                            <button className='bg-gray-50 flex p-2 rounded-full transition-all duration-500 group hover:bg-gray-100 hover:border-none border-none' ><Users strokeWidth={1.3} className='text-gray-400 hover:text-gray-500' /></button>
+                            <button onClick={() => dispatch(toggleCreateGroup())} className='bg-gray-50 flex p-2 rounded-full transition-all duration-500 group hover:bg-gray-100 hover:border-none border-none' ><Users strokeWidth={1.3} className='text-gray-400 hover:text-gray-500' /></button>
                         </div>
                     </div>
                     {

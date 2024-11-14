@@ -8,6 +8,7 @@ import { Socket } from "socket.io-client";
 import MobileFooter from "./MobileFooter";
 import OtherUserDetail from "./OtherUserDetail";
 import MessageContainer from "./MessageContainer";
+import CreateGroupModal from "./CreateGroupModal";
 
 const ContactList = lazy(() => import("./ContactList"));
 const Message = lazy(() => import("./Message"));
@@ -112,6 +113,7 @@ export default function Home() {
     <>
       {/* <button onClick={disconn}>disconn</button> */}
       <div className="flex grow relative">
+        <CreateGroupModal />
         <div className="w-full md:w-6/12 xl:w-4/12 2xl-3/12">
           <ContactList {...{ showProfile, userData, socket, activeChatls, setActiveChatls, onlineUsersList, setOnlineUsers }} />
         </div>
