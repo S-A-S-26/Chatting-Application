@@ -30,7 +30,7 @@ body {
 }
 
 .inset-shadow {
-  box-shadow: inset 0 0 10px #0147ff40;
+  box-shadow: inset 0 0 3px #0147ff40;
 }
 
 .no-scroll {
@@ -44,6 +44,8 @@ body {
   display: none;
   /* Chrome, Safari and Opera */
 }
+
+
 
 @keyframes logo-spin {
   from {

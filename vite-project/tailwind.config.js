@@ -9,6 +9,7 @@ export default {
                 extend: {
                         colors: {
                                 mysecondary: '#0147ff',
+                                mask: 'rgba(0, 0, 0, 0.24)',
                                 mybackground: '#f6f8fc',
                                 secondary: {
                                         DEFAULT: 'hsl(var(--secondary))',
