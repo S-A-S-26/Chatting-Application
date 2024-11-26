@@ -50,7 +50,7 @@ export default function Login({ setRegView }: { setRegView: (value: boolean) => 
                         <KeyRound strokeWidth={0.75} />
                         <input className='w-full outline-none bg-transparent' type="password" placeholder='Password' name='password' onChange={(e) => handleInput(e)} value={user.password} />
                     </div>
-                    <button onClick={Register} className='text-white tracking-wide mt-6 bg-gradient-to-r from-sky-500 to-indigo-500hover:border-blue-900'>
+                    <button onClick={Register} className='button-padding text-white tracking-wide mt-6 bg-gradient-to-r from-sky-500 to-indigo-500hover:border-blue-900'>
                         Submit
                     </button>
                     <button className='bg-transparent border-none underline hover:text-blue-400' onClick={() => setRegView(true)}>
