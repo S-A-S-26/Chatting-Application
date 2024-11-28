@@ -24,7 +24,6 @@ export default function Login({ setRegView }: { setRegView: (value: boolean) => 
         let data = await res.json()
         console.log("data login", data)
         if (res.status === 200) {
-            alert(`success`)
             toast.success(data.msg)
             localStorage.setItem('token', data.token)
             Navigate('/')
