@@ -5,10 +5,11 @@ const { getInstanceIo, online } = require('../socket/socket')
 
 
 async function createGroup(req, res) {
-    console.log("create groupChat req body", req.body)
+    console.log("create groupChat req body", req.body, req.body.room)
+    console.log("req.body.partic", req.body.participants, typeof req.body.participants)
     try {
         if (req.body) {
-            let chat = await Chat.findOne({ groupName: req.body.room })
+            let chat = await Chat.findOne({ groupName: req.body.room, isGroup: true })
             let newMessageId
             console.log("existing chat", chat)
             if (!req.body.new) {
@@ -19,15 +20,18 @@ async function createGroup(req, res) {
                 sendDataToReceipient(req.body.sentBy, req.body.room, req.body.message, newMessageId)
             } else {
 
+                let participants_list = req.body.participants.split(',')
                 const user = await new User({
                     "username": req.body.groupName,
                     "phone": req.body.groupName,
                     "group": true,
-                    "participants": req.body.paricipants,
+                    "participants": participants_list,
+                    "profile": req.body.groupName,
+                    "status": "Group Chat",
                 })
                 await user.save()
                 chat = new Chat({
-                    "participants": req.body.participants,
+                    "participants": participants_list,
                     "isGroup": true,
                     "groupName": req.body.groupName,
                     "creator": req.body.creator,
@@ -43,6 +47,7 @@ async function createGroup(req, res) {
         }
 
     } catch (error) {
+        console.log("eroor createGroup", error)
         res.status(500).json({
             msg: `Server Error:${error}`
         })

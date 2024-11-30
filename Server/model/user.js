@@ -21,7 +21,7 @@ const userSchema = new Schema({
     profile: { type: String },
     status: { type: String, default: "Hey There" },
     pinned: { type: [String] },
-    particpants: { type: [String] },
+    participants: { type: [String] },
     unseenCount: { type: Number, default: 0 },
     lastMsgTimestamp: { type: Date, default: null },
     lastSeen: { type: Date, required: true, default: Date.now() },

@@ -32,7 +32,7 @@ router.post('/sendmessage', createChat)
 router.get('/getonlineusers', (req, res) => res.status(200).json({ online }))
 router.post('/fetchchats', fetchChat)
 router.post('/markseen', addSeenStatusOffline)
-router.post('/createGroup', createGroup)
+router.post('/createGroup', upload.single('file'), createGroup)
 router.post('/fetchgroupchats', fetchGroupChat)
 
 module.exports = router;

@@ -17,6 +17,8 @@ export interface TProfile {
     pinned: [],
     lastSeen: string,
     unseenCount: number,
+    groupName: string,
+    isGroup: boolean,
 }
 
 export interface TUpdateProfile {

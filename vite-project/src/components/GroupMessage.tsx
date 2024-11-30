@@ -103,7 +103,7 @@ export default function Message({ toggleOtherProfile, setProfileStatus, showProf
     }, [messageProfileData])
 
     useEffect(() => {
-        console.log("use effect for socket incoming init ", socket, messageProfileData)
+        console.log("use effect for socket incoming init group chat ", socket, messageProfileData)
         if (socket) {
             socket.on('roomMessage', (val) => {
                 console.log("room message", chats, val)

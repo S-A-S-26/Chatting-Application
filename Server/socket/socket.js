@@ -53,7 +53,8 @@ function initiateSocket(io) {
         })
 
         socket.on('joinRoom', (val) => {
-            console.log("join room", val)
+            console.log("join room", val, socket.id)
+            console.log("socket id", socket.id)
             socket.join(val)
         })
 

@@ -54,16 +54,20 @@ export default function CreateGroupModal() {
         //                 "new": "true"
 
         // }
+
+        if (participants.length == 0 || groupName == undefined || groupName == "") return
         if (!file.current?.files) return;
         console.log("changePhoto", file.current.files[0])
-        console.log("participants", participants, groupName)
-        return
+        console.log("participants", typeof participants, participants, groupName)
+        // return
         const formData = new FormData();
         formData.append('participants', participants)
-        formData.append('filename', file.name)
         formData.append('groupName', groupName)
         formData.append('creator', sliceData._id)
         formData.append('new', true)
+        formData.append('file', file.current.files[0])
+        console.log("formData", formData)
+        // return
         let res = await fetch(import.meta.env.VITE_BASE_URL + "/createGroup",
             {
                 method: 'POST',
@@ -71,11 +75,15 @@ export default function CreateGroupModal() {
             }
         )
         let data = await res.json()
+        if (res.status == 200) {
+            dispatch(toggleCreateGroup())
+        }
 
 
     }
 
     useEffect(() => console.log(participants), [participants])
+    useEffect(() => console.log("useEffect cfn", currentFileName), [currentFileName])
 
     return (groupModal && <>
         <div onClick={() => dispatch(toggleCreateGroup())} className="fixed top-0 bottom-0 right-0 left-0 z-30 bg-mask"></div>
