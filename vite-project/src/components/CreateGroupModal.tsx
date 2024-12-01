@@ -160,8 +160,8 @@ export default function CreateGroupModal() {
                     }
                 </div>
                 {screen == 0 &&
-                    <button className="grid justify-end w-full absolute bottom-0" onClick={() => setScreen((prev) => prev + 1)}>
-                        <ArrowRight className="text-mysecondary mx-8 my-4" size={35} />
+                    <button className="grid justify-end right-0 absolute bottom-0 px-1 ml-1" onClick={() => setScreen((prev) => prev + 1)}>
+                        <ArrowRight className="text-mysecondary mr-8 my-4" size={35} />
                     </button >
                 }
             </div>

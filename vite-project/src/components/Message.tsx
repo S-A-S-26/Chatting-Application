@@ -262,7 +262,7 @@ export default function Message({ toggleOtherProfile, setProfileStatus, showProf
               <Messages {...{ chats }} />
             </div >
             <div className='relative z-10'>
-              <div ref={showEmoji} className='m-2 z-1 absolute transition-all duration-500 bottom-[-300px] text-xl bg-white rounded-lg overflow-hidden'><Emojis {...{ addEmojitoMsg }} /></div>
+              <div ref={showEmoji} className='m-2 z-1 absolute transition-all duration-500 bottom-[-300px] text-xl bg-white rounded-lg overflow-hidden'><Emojis {...{ addEmojitoMsg, toggleEmojiWindow }} /></div>
               <div className='h-20 flex items-center justify-center bg-white relative z-10'>
                 <div className='flex grow gap-3 mx-4 px-8 h-12 items-center rounded-full bg-mybackground relative'>
                   <button className='bg-transparent p-0 border-none' onClick={toggleEmojiWindow}>

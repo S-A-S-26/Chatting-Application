@@ -7,7 +7,7 @@ async function createChat(req, res) {
     console.log("create Chat req body", req.body)
     try {
         if (req.body) {
-            let chat = await Chat.findOne({ participants: { $all: req.body.participants } })
+            let chat = await Chat.findOne({ participants: { $all: req.body.participants }, isGroup: false })
             let newMessageId
             // console.log("existing chat", chat)
             if (chat) {
